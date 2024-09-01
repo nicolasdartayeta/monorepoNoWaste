@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Run linting
+echo "Running lint..."
+bun run lint
+LINT_EXIT_CODE=$?
+
+# Run formatting
+echo "Running formatting..."
+bun run format
+FORMAT_EXIT_CODE=$?
+
+# Check if linting or formatting failed
+if [ $LINT_EXIT_CODE -ne 0 ] || [ $FORMAT_EXIT_CODE -ne 0 ]; then
+    echo "Linting or formatting failed. Commit aborted."
+    exit 1
+fi
+
+git add .
+
+echo "Linting and formatting passed. Proceeding with commit."
