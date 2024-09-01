@@ -1,8 +1,10 @@
 import { Elysia } from "elysia";
 import { logger } from "@server/logger";
+import swagger from "@elysiajs/swagger";
 
 const app = new Elysia()
   .use(logger())
+  .use(swagger())
   .get("/", () => "Hola bobo").listen(3000);
 
 console.log(
