@@ -16,6 +16,6 @@ if [ $LINT_EXIT_CODE -ne 0 ] || [ $FORMAT_EXIT_CODE -ne 0 ]; then
     exit 1
 fi
 
-git add .
+git update-index --again
 
 echo "Linting and formatting passed. Proceeding with commit."
