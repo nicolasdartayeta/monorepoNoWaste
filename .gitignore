@@ -12,6 +12,7 @@
 **/build
 
 # misc
+**/bun.lockb
 **/.vscode
 **/.DS_Store
 **/*.pem

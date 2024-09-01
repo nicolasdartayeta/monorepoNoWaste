@@ -9,11 +9,15 @@
   },
   "dependencies": {
     "@elysiajs/swagger": "^1.1.1",
-    "elysia": "latest"
+    "elysia": "latest",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "bun-types": "latest",
-    "prettier": "3.3.3"
+    "prettier": "3.3.3",
+    "eslint": "^9.9.1",
+    "@eslint/js": "^9.9.1",
+    "typescript-eslint": "^8.3.0"
   },
   "module": "src/index.js"
 }
