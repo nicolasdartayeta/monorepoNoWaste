@@ -19,3 +19,4 @@ fi
 git update-index --again
 
 echo "Linting and formatting passed. Proceeding with commit."
+echo "OOOO"
