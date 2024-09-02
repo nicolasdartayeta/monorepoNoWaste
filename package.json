@@ -5,7 +5,7 @@
       "packages/*"
     ],
     "scripts": {
-      "dev": "bun run --filter '*' dev",
+      "dev": "bun install && bun run --filter '*' dev",
       "lint": "bun run --filter '*' lint",
       "format": "bun run --filter '*' format",
       "build": "bun run --filter '*' build",
