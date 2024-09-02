@@ -11,7 +11,7 @@ services:
     environment:
       DATABASE_URL: postgres://admin:admin@postgres:5432/NoWaste
     working_dir: /usr/src/app
-    command: bun docker:dev
+    command: bun dev
     
   postgres:
     image: postgres:15-alpine
