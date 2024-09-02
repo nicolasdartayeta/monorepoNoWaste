@@ -5,7 +5,7 @@ import swagger from "@elysiajs/swagger";
 const app = new Elysia()
   .use(logger())
   .use(swagger())
-  .get("/", () => "Hola bobo")
+  .get("/", () => "Hola")
   .listen(3000);
 
 console.log(
