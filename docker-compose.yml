@@ -1,11 +1,12 @@
 services:
   bun:
-    image: oven/bun:latest
+    image: imbios/bun-node
     volumes:
       - ./:/usr/src/app
     ports:
       - 3000:3000
       - 4321:4321
+      - 4983:4983
     depends_on:
       - postgres
     environment:

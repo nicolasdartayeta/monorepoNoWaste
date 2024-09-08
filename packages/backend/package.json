@@ -6,7 +6,7 @@
     "dev": "bun run --watch src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "migrate": "bun drizzle-kit generate && bun run db/migrate",
+    "migrate": "bun drizzle-kit generate && bun drizzle-kit migrate",
     "docker:dev": "bun install && bun dev"
   },
   "dependencies": {
