@@ -1,12 +1,15 @@
 import { Elysia } from "elysia";
-import { getAllUsers } from "@server/src/helpers/userFunctions";
+import { addUser, getAllUsers } from "@server/src/helpers/userFunctions";
 import { userInsertDTO } from "@server/src/types";
 
 export const userController = new Elysia({ prefix: "/user" })
   .post(
     "/signup",
-    ({ body }) => {
-      return body;
+    async ({ body }) => {
+      const newUser = body;
+      newUser.password = await Bun.password.hash(newUser.password);
+      const result = await addUser(newUser);
+      return { agregado: result };
     },
     {
       body: userInsertDTO,
@@ -16,6 +19,15 @@ export const userController = new Elysia({ prefix: "/user" })
       },
     },
   )
-  .get("all", async () => {
-    return await getAllUsers();
-  });
+  .get(
+    "all",
+    async () => {
+      return await getAllUsers();
+    },
+    {
+      detail: {
+        summary: "Get all users in DB",
+        tags: ["users"],
+      },
+    },
+  );
