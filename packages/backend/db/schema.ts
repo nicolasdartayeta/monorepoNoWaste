@@ -17,9 +17,6 @@ export const users = pgTable("users", {
   password: varchar("password", { length: 100 }).notNull(),
 });
 
-export type User = typeof users.$inferSelect; // return type when queried
-export type NewUser = typeof users.$inferInsert; // insert type
-
 export const commerce = pgTable("commerce", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
@@ -33,9 +30,6 @@ export const commerce = pgTable("commerce", {
     .references(() => users.id),
 });
 
-export type Commerce = typeof commerce.$inferSelect; // return type when queried
-export type NewCommerce = typeof commerce.$inferInsert; // insert type
-
 export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
@@ -47,9 +41,6 @@ export const products = pgTable("products", {
     .references(() => collections.id),
 });
 
-export type Product = typeof products.$inferSelect; // return type when queried
-export type NewProduct = typeof products.$inferInsert; // insert type
-
 export const collections = pgTable("collections", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
@@ -58,17 +49,11 @@ export const collections = pgTable("collections", {
     .references(() => commerce.id),
 });
 
-export type Collection = typeof collections.$inferSelect; // return type when queried
-export type NewCollection = typeof collections.$inferInsert; // insert type
-
 export const proudctCategory = pgTable("product_category", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
   description: varchar("description", { length: 200 }).notNull(),
 });
-
-export type ProductCategory = typeof proudctCategory.$inferSelect; // return type when queried
-export type NewProductCategory = typeof proudctCategory.$inferInsert; // insert type
 
 export const productHasCategory = pgTable(
   "product_has_category",
@@ -87,9 +72,6 @@ export const productHasCategory = pgTable(
   },
 );
 
-export type ProductHasCategory = typeof productHasCategory.$inferSelect; // return type when queried
-export type NewProductHasCategory = typeof productHasCategory.$inferInsert; // insert type
-
 export const purchases = pgTable("purchases", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   user_id: uuid("user_id")
@@ -98,9 +80,6 @@ export const purchases = pgTable("purchases", {
   state: varchar("state", { length: 30 }).notNull(),
   purchase_date: timestamp("purchase_date").notNull().defaultNow(),
 });
-
-export type Purchase = typeof purchases.$inferSelect; // return type when queried
-export type NewPurchase = typeof purchases.$inferInsert; // insert type
 
 export const purchaseHasProduct = pgTable(
   "purchase_has_product",
@@ -118,6 +97,3 @@ export const purchaseHasProduct = pgTable(
     };
   },
 );
-
-export type PurchaseHasProduct = typeof purchaseHasProduct.$inferSelect; // return type when queried
-export type NewPurchaseHasProduct = typeof purchaseHasProduct.$inferInsert; // insert type

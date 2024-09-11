@@ -1,10 +1,14 @@
 import { Elysia } from "elysia";
-import { logger } from "@server/logger";
+import { logger } from "./controllers/logger";
 import swagger from "@elysiajs/swagger";
+import { loginController } from "./controllers/login";
+import { userController } from "./controllers/users";
 
 const app = new Elysia()
   .use(logger())
   .use(swagger())
+  .use(loginController)
+  .use(userController)
   .get("/", () => "Hola bobina")
   .listen(3000);
 
