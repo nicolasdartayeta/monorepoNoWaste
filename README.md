@@ -1,6 +1,6 @@
 # Monorepo No Waste
 
-## Inicializar el proyecto para usar custon hooks
+## Inicializar el proyecto para usar custom hooks
 
 Usar los hooks de la carpeta .githooks
 ```bash
