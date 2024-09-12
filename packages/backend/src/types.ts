@@ -1,6 +1,6 @@
 import { createInsertSchema } from "drizzle-typebox";
-import { users } from "@server/db/schema";
 import { commerce } from "@server/db/schema";
+import { products, users } from "@server/db/schema";
 import { t } from "elysia";
 
 const user = createInsertSchema(users);
@@ -12,3 +12,6 @@ export const commerceInsertDTO = t.Omit(Commerce, [
   "creation_date",
   "active",
 ]);
+
+const product = createInsertSchema(products);
+export const productInsertDTO = t.Omit(product, ["id", "collection_id"]);
