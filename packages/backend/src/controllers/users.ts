@@ -7,7 +7,7 @@ export const userController = new Elysia({ prefix: "/user" })
     "/signup",
     async ({ body }) => {
       const newUser = body;
-      newUser.password = await Bun.password.hash(newUser.password);
+      newUser.password = await Bun.password.hash(newUser.password); //Encripta password
       const result = await addUser(newUser);
       return { agregado: result };
     },
@@ -20,7 +20,7 @@ export const userController = new Elysia({ prefix: "/user" })
     },
   )
   .get(
-    "all",
+    "/all",
     async () => {
       return await getAllUsers();
     },
