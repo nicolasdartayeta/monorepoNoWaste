@@ -23,9 +23,8 @@ const app = new Elysia()
         if (!user) return "Authenticate first";
       },
     },
-    (app) => app.use(userController).get("/", () => "Hola bobina"),
+    (app) => app.use(userController),
   )
-
   .listen(3000);
 
 console.log(

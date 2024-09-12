@@ -1,8 +1,9 @@
 import { Elysia, t } from "elysia";
 import jwt from "@elysiajs/jwt";
-import { getUserByEmail } from "../models/userFunctions";
+import { addUser, getUserByEmail } from "@server/src/models/userFunctions";
+import { userInsertDTO } from "@server/src/types";
 
-export const loginController = new Elysia({ prefix: "/login" })
+export const loginController = new Elysia()
   .use(
     jwt({
       name: "jwt",
@@ -10,7 +11,7 @@ export const loginController = new Elysia({ prefix: "/login" })
     }),
   )
   .post(
-    "/",
+    "/login",
     async ({ body, jwt, cookie: { auth } }) => {
       const user = await getUserByEmail(body.email);
 
@@ -45,6 +46,22 @@ export const loginController = new Elysia({ prefix: "/login" })
       ),
       detail: {
         summary: "Sign in the user",
+        tags: ["authentication"],
+      },
+    },
+  )
+  .post(
+    "/signup",
+    async ({ body }) => {
+      const newUser = body;
+      newUser.password = await Bun.password.hash(newUser.password);
+      const result = await addUser(newUser);
+      return { agregado: result };
+    },
+    {
+      body: userInsertDTO,
+      detail: {
+        summary: "Sign up a new user",
         tags: ["authentication"],
       },
     },
