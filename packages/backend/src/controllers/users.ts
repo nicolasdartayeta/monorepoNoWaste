@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { addUser, getAllUsers } from "@server/src/helpers/userFunctions";
+import { addUser, getAllUsers } from "../models/userFunctions";
 import { userInsertDTO } from "@server/src/types";
 
 export const userController = new Elysia({ prefix: "/user" })

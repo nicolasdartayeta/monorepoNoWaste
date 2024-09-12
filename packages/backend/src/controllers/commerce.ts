@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { addCommerce } from "@server/src/helpers/commerceFunctions";
+import { addCommerce } from "@server/src/models/commerceFunctions";
 import { commerceInsertDTO } from "@server/src/types";
 
 export const commerceController = new Elysia ({prefix: "/commerce" })
