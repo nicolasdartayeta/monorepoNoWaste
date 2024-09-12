@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
-import { addCommerce, getAllCommerces, deleteCommerce } from "@server/src/models/commerceFunctions";
-import { commerceInsertDTO } from "@server/src/types";
+import { addCommerce, getAllCommerces, deleteCommerce, getCommerceById, updateCommerce } from "@server/src/models/commerceFunctions";
+import { commerceInsertDTO, commerceUpdateDTO } from "@server/src/types";
 
 export const commerceController = new Elysia ({prefix: "/commerce" })
     .post("/",
@@ -28,25 +28,41 @@ export const commerceController = new Elysia ({prefix: "/commerce" })
             }
         }
     )
+    .get("/:id",
+        async({params:{id}}) => {
+            return await getCommerceById(id);
+        },
+        {
+            detail:{
+                summary: "Get a commerce",
+                tags: ["commerces"]
+            }
+        }
+
+    )
     .delete("/:id",
         async ({params : {id}}) => {
             const result = await deleteCommerce(id);
             return {eliminado: result};
         },
         {
-            detail: {
+            detail:{
                 summary: "Delete a commerce",
                 tags: ["commerces"]
             }
         }
     )
-    /**
     .put("/:id",
         async ({body}) => {
-            const updateCommerce = body;
+            const updCommerce = body;
+            const result = await updateCommerce(updCommerce);
+            return {actualizado: result};
         },
         {
-            body: commerceInsertDTO
+            body: commerceUpdateDTO,
+            detail :{
+                summary: "Update a commmerce",
+                tags : ["commerces"],
+            }
         }
     )
-    */
