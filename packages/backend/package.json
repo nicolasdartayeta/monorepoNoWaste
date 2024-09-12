@@ -18,7 +18,9 @@
     "drizzle-typebox": "^0.1.1",
     "elysia": "latest",
     "eslint-plugin-drizzle": "^0.2.3",
+    "mercadopago": "^2.0.15",
     "postgres": "^3.4.4",
+    "typebox": "^0.0.1",
     "typescript": "^5.5.4"
   },
   "devDependencies": {
