@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { db } from '@server/db/db'
-import { collections, commerce, products, users } from "@server/db/schema";
+import { collections, products } from "@server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const productController = new Elysia({prefix : "/product"})
@@ -15,7 +15,7 @@ export const productController = new Elysia({prefix : "/product"})
     try {
       const collection = await db.query.collections.findFirst({where: eq(collections.id, collection_id)});
       if (collection){
-        const newProduct = await db.insert(products).values({
+        await db.insert(products).values({
           name,
           description,
           price,
