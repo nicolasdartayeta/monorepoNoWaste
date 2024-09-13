@@ -1,16 +1,16 @@
 {
     "name": "my-monorepo",
     "private": true,
-    "workspaces": [
-      "packages/*"
-    ],
     "scripts": {
-      "dev": "bun install && bun run --filter '*' dev",
-      "lint": "bun run --filter '*' lint",
-      "format": "bun run --filter '*' format",
-      "build": "bun run --filter '*' build",
-      "start": "bun run --filter '*' start",
-      "test": "bun run --filter '*' test",
-      "docker:dev": "bun run --filter '*' docker:dev"
-    }
-  }
+        "dev": "bun install && bun run --filter '*' dev",
+        "lint": "bun run --filter '*' lint",
+        "format": "bun run --filter '*' format",
+        "build": "bun run --filter '*' build",
+        "start": "bun run --filter '*' start",
+        "test": "bun run --filter '*' test",
+        "docker:dev": "bun run --filter '*' docker:dev"
+    },
+    "workspaces": [
+        "packages/*"
+    ]
+}
