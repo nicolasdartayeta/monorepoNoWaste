@@ -1,6 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+import { api } from "../lib/api"
+
+function addProduct(){
+	api.post('/product', {
+  		name: 'New Product',
+  		description: 'Description of the new product',
+  		price: '19.99',
+  		expiration_date: '2024-09-11',
+  		collection_id: 'your-collection-id-here'	
+	})
+}
+
 ---
 
 <Layout title="Welcome to Astro.">
@@ -59,6 +71,19 @@ import Card from '../components/Card.astro';
 				title="Community"
 				body="Come say hi to our amazing Discord community. ❤️"
 			/>
+			<script>
+				import { api } from "../lib/api"
+
+				function addProduct(){
+					api.delete('/product/b3629cae-3841-43e9-8f50-2cf36cc359a3')
+				}
+				const buttons = document.querySelectorAll('[add-product]');
+			  
+				buttons.forEach((button) => {
+				  button.addEventListener('click', () => addProduct());
+				});
+			  </script>
+			<button add-product>Agregar Producto</button>
 		</ul>
 	</main>
 </Layout>
