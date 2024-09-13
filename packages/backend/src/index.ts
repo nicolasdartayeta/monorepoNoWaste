@@ -5,6 +5,8 @@ import { loginController } from "./controllers/login";
 import { userController } from "./controllers/users";
 import jwt from "@elysiajs/jwt";
 import { commerceController } from "./controllers/commerce";
+import { productController } from "./controllers/product";
+import { cors } from '@elysiajs/cors';
 
 const app = new Elysia()
   .use(
@@ -13,10 +15,12 @@ const app = new Elysia()
       secret: Bun.env.JWT_SECRET as string,
     }),
   )
+  .use(cors()) // Enable CORS
   .use(logger())
   .use(swagger())
   .use(loginController)
   .use(commerceController)
+  .use(productController)
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {

@@ -1,6 +1,9 @@
 {
     "name": "my-monorepo",
     "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
     "scripts": {
         "dev": "bun install && bun run --filter '*' dev",
         "lint": "bun run --filter '*' lint",
@@ -10,7 +13,8 @@
         "test": "bun run --filter '*' test",
         "docker:dev": "bun run --filter '*' docker:dev"
     },
-    "workspaces": [
-        "packages/*"
-    ]
+    "dependencies": {
+        "@elysiajs/cors": "^1.1.1",
+        "@elysiajs/jwt": "^1.1.1"
+    }
 }
