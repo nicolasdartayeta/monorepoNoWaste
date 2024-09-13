@@ -1,19 +1,36 @@
 import { Elysia } from "elysia";
 import { logger } from "./controllers/logger";
-import swagger from "@elysiajs/swagger";
+import { swagger } from "@elysiajs/swagger";
 import { loginController } from "./controllers/login";
 import { userController } from "./controllers/users";
+import jwt from "@elysiajs/jwt";
+import { commerceController } from "./controllers/commerce";
 import { productController } from "./controllers/product";
-import { cors } from '@elysiajs/cors'; // Install with npm install @elysiajs/corsc
+import { cors } from '@elysiajs/cors';
 
-export const app = new Elysia()
+const app = new Elysia()
+  .use(
+    jwt({
+      name: "jwt",
+      secret: Bun.env.JWT_SECRET as string,
+    }),
+  )
   .use(cors()) // Enable CORS
   .use(logger())
   .use(swagger())
   .use(loginController)
-  .use(userController)
+  .use(commerceController)
   .use(productController)
-  .get("/", () => "Hola bobina")
+  .guard(
+    {
+      async beforeHandle({ jwt, cookie: { auth } }) {
+        const user = await jwt.verify(auth.value);
+
+        if (!user) return "Authenticate first";
+      },
+    },
+    (app) => app.use(userController),
+  )
   .listen(3000);
 
 console.log(
