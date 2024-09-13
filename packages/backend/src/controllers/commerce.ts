@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { addCommerce, getAllCommerces, deleteCommerce, getCommerceById, updateCommerce } from "@server/src/models/commerceFunctions";
+import { addCommerce, getAllCommerces, deleteCommerce, getCommerceById, updateCommerce, getCommerceByFilter } from "@server/src/models/commerceFunctions";
 import { commerceInsertDTO, commerceUpdateDTO } from "@server/src/types";
 
 export const commerceController = new Elysia ({prefix: "/commerce" })
@@ -18,7 +18,11 @@ export const commerceController = new Elysia ({prefix: "/commerce" })
         }
     )
     .get("/",
-        async () => {
+        async ({query}) => {
+            if (query.name || query.city || query.address ){
+                return await getCommerceByFilter(query.name,query.city,query.address); //Filtra solo por los parametros que se le indica. Chequear como hacer para que sea general.
+            }
+
             return await getAllCommerces();
         },
         {
