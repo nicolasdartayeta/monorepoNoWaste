@@ -3,7 +3,7 @@ import jwt from "@elysiajs/jwt";
 import { addUser, getUserByEmail } from "@server/src/models/userFunctions";
 import { userInsertDTO } from "@server/src/types";
 
-export const loginController = new Elysia()
+export const loginController = new Elysia({ prefix: "user" })
   .use(
     jwt({
       name: "jwt",

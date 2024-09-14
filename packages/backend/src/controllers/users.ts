@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { getAllUsers } from "../models/userFunctions";
+import { getAllUsers } from "@server/src/models/userFunctions";
 
 export const userController = new Elysia({ prefix: "/user" }).get(
   "/all",

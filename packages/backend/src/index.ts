@@ -16,7 +16,6 @@ const app = new Elysia()
   .use(logger())
   .use(swagger())
   .use(loginController)
-  .use(commerceController)
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {
@@ -25,7 +24,7 @@ const app = new Elysia()
         if (!user) return "Authenticate first";
       },
     },
-    (app) => app.use(userController),
+    (app) => app.use(userController).use(commerceController),
   )
   .listen(3000);
 
