@@ -1,6 +1,6 @@
 import { NewCommerce, Commerce, commerce } from "@server/db/schema";
 import { db } from "@server/db/db";
-import { eq, or } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 export async function getAllCommerces(){
     return await db.select().from(commerce);
@@ -40,7 +40,7 @@ export async function updateCommerce(commerceUpd: Commerce ){ //Chequear como ha
 
 export async function getCommerceByFilter(Name?: string, City?: string, Address?: string) {
     const result = await db.select().from(commerce).where(
-        or(
+        and(
             Name ? eq(commerce.name,Name) : undefined,
             City ? eq(commerce.city,City) : undefined,
             Address ? eq(commerce.address,Address) : undefined
