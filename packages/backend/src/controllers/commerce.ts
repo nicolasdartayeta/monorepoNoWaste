@@ -3,8 +3,11 @@ import {
   addCommerce,
   getAllCommerces,
   deleteCommerce,
+  getCommerceById,
+  updateCommerce,
+  getCommerceByFilter,
 } from "@server/src/models/commerceFunctions";
-import { commerceInsertDTO } from "@server/src/types";
+import { commerceInsertDTO, commerceUpdateDTO } from "@server/src/types";
 
 export const commerceController = new Elysia({ prefix: "/commerce" })
   .post(
@@ -24,12 +27,28 @@ export const commerceController = new Elysia({ prefix: "/commerce" })
   )
   .get(
     "/",
-    async () => {
+    async ({ query }) => {
+      if (query.name || query.city || query.address) {
+        return await getCommerceByFilter(query.name, query.city, query.address); //Filtra solo por los parametros que se le indica. Chequear como hacer para que sea general.
+      }
+
       return await getAllCommerces();
     },
     {
       detail: {
         summary: "Get all commerces in DB",
+        tags: ["commerces"],
+      },
+    },
+  )
+  .get(
+    "/:id",
+    async ({ params: { id } }) => {
+      return await getCommerceById(id);
+    },
+    {
+      detail: {
+        summary: "Get a commerce",
         tags: ["commerces"],
       },
     },
@@ -46,14 +65,19 @@ export const commerceController = new Elysia({ prefix: "/commerce" })
         tags: ["commerces"],
       },
     },
+  )
+  .put(
+    "/:id",
+    async ({ body }) => {
+      const updCommerce = body;
+      const result = await updateCommerce(updCommerce);
+      return { actualizado: result };
+    },
+    {
+      body: commerceUpdateDTO,
+      detail: {
+        summary: "Update a commmerce",
+        tags: ["commerces"],
+      },
+    },
   );
-/**
-    .put("/:id",
-        async ({body}) => {
-            const updateCommerce = body;
-        },
-        {
-            body: commerceInsertDTO
-        }
-    )
-    */
