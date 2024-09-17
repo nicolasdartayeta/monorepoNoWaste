@@ -7,7 +7,11 @@ import { randomBytes } from "crypto";
 
 const googleOauthFile = await Bun.file("clienteGoogle.json").json();
 
-const oauth2ClientGoogle = new google.auth.OAuth2(googleOauthFile);
+const oauth2ClientGoogle = new google.auth.OAuth2(
+  googleOauthFile.web.client_id,
+  googleOauthFile.web.client_secret,
+  googleOauthFile.web.redirect_uris[0],
+);
 
 const scopes = ["openid"];
 
@@ -62,23 +66,54 @@ export const authController = new Elysia({ prefix: "auth" })
     },
   )
   .group("/google", (app) =>
-    app.get(
-      "",
-      () => {
-        const state = randomBytes(32).toString("hex");
-        const authURL = oauth2ClientGoogle.generateAuthUrl({
-          scope: scopes,
-          include_granted_scopes: true,
-          state: state,
-        });
+    app
+      .get(
+        "",
+        async ({ jwt, cookie: { authRequest } }) => {
+          const state = randomBytes(32).toString("hex");
 
-        redirect(authURL);
-      },
-      {
-        detail: {
-          summary: "Sign in the user with google",
-          tags: ["authentication"],
+          authRequest.value = await jwt.sign({
+            state: state,
+          });
+
+          const authURL = oauth2ClientGoogle.generateAuthUrl({
+            scope: scopes,
+            include_granted_scopes: true,
+            state: state,
+          });
+
+          console.log("redirigido");
+          return redirect(authURL, 301);
         },
-      },
-    ),
+        {
+          detail: {
+            summary: "Sign in the user with google",
+            tags: ["authentication"],
+          },
+        },
+      )
+      .get(
+        "/callback",
+        async ({ query }) => {
+          // codigo que devuelve google como queryParam con el que desp se piden los tokens
+          const code = query.code;
+
+          const { tokens } = await oauth2ClientGoogle.getToken(code);
+
+          // verificar token de openid. el ticket tiene los datos del usuario
+          const ticket = await oauth2ClientGoogle.verifyIdToken({
+            idToken: tokens.id_token as string,
+            audience: googleOauthFile.web.client_id,
+          });
+
+          console.log(ticket.getPayload());
+
+          return redirect("/");
+        },
+        {
+          query: t.Object({
+            code: t.String(),
+          }),
+        },
+      ),
   );

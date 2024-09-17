@@ -16,12 +16,14 @@ const app = new Elysia()
       secret: Bun.env.JWT_SECRET as string,
     }),
   )
+  .get("/", () => {
+    return "gordo puto";
+  })
   .use(cors()) // Enable CORS
   .use(logger())
   .use(swagger())
   .use(authController)
   .use(unauthenticatedUsersController)
-
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {
