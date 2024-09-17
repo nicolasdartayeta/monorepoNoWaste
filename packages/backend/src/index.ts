@@ -1,10 +1,10 @@
 import { Elysia } from "elysia";
-import { logger } from "./controllers/logger";
+import { logger } from "@server/src/controllers/logger";
 import { swagger } from "@elysiajs/swagger";
-import { loginController } from "./controllers/login";
-import { userController } from "./controllers/users";
+import { loginController } from "@server/src/controllers/login";
+import { userController } from "@server/src/controllers/users";
 import jwt from "@elysiajs/jwt";
-import { commerceController } from "./controllers/commerce";
+import { commerceController } from "@server/src/controllers/commerce";
 // import { productController } from "@server/src/controllers/product";
 import { cors } from "@elysiajs/cors";
 
