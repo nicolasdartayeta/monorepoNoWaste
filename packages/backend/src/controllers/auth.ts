@@ -5,7 +5,7 @@ import { getUserByEmail } from "@server/src/models/userFunctions";
 import { google } from "googleapis";
 import { randomBytes } from "crypto";
 
-const googleOauthFile = await Bun.file("../../clienteGoogle.json").json();
+const googleOauthFile = await Bun.file("clienteGoogle.json").json();
 
 const oauth2ClientGoogle = new google.auth.OAuth2(googleOauthFile);
 
@@ -56,20 +56,29 @@ export const authController = new Elysia({ prefix: "auth" })
         },
       ),
       detail: {
-        summary: "Sign in the user",
+        summary: "Sign in the user with password",
         tags: ["authentication"],
       },
     },
   )
   .group("/google", (app) =>
-    app.get("", () => {
-      const state = randomBytes(32).toString("hex");
-      const authURL = oauth2ClientGoogle.generateAuthUrl({
-        scope: scopes,
-        include_granted_scopes: true,
-        state: state,
-      });
+    app.get(
+      "",
+      () => {
+        const state = randomBytes(32).toString("hex");
+        const authURL = oauth2ClientGoogle.generateAuthUrl({
+          scope: scopes,
+          include_granted_scopes: true,
+          state: state,
+        });
 
-      redirect(authURL);
-    }),
+        redirect(authURL);
+      },
+      {
+        detail: {
+          summary: "Sign in the user with google",
+          tags: ["authentication"],
+        },
+      },
+    ),
   );

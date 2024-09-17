@@ -3,7 +3,7 @@ import jwt from "@elysiajs/jwt";
 import { addUser } from "@server/src/models/userFunctions";
 import { userInsertDTO } from "@server/src/types";
 
-export const loginController = new Elysia({ prefix: "user" })
+export const unauthenticatedUsersController = new Elysia({ prefix: "user" })
   .use(
     jwt({
       name: "jwt",
@@ -27,16 +27,25 @@ export const loginController = new Elysia({ prefix: "user" })
       body: userInsertDTO,
       detail: {
         summary: "Sign up a new user",
-        tags: ["authentication"],
+        tags: ["user"],
       },
     },
   )
-  .get("/logout", ({ cookie: { auth } }) => {
-    // Borrar el jwt de la cookie
-    auth.remove();
+  .get(
+    "/logout",
+    ({ cookie: { auth } }) => {
+      // Borrar el jwt de la cookie
+      auth.remove();
 
-    // Habria que redirigir al home
-    // redirect("/", 301);
+      // Habria que redirigir al home
+      // redirect("/", 301);
 
-    return "redirigir a /home";
-  });
+      return "redirigir a /home";
+    },
+    {
+      detail: {
+        summary: "Log out user",
+        tags: ["user"],
+      },
+    },
+  );
