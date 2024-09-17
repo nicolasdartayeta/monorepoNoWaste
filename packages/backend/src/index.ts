@@ -7,6 +7,7 @@ import jwt from "@elysiajs/jwt";
 import { commerceController } from "@server/src/controllers/commerce";
 // import { productController } from "@server/src/controllers/product";
 import { cors } from "@elysiajs/cors";
+import { authController } from "@server/src/controllers/auth";
 
 const app = new Elysia()
   .use(
@@ -18,6 +19,7 @@ const app = new Elysia()
   .use(cors()) // Enable CORS
   .use(logger())
   .use(swagger())
+  .use(authController)
   .use(loginController)
 
   .guard(

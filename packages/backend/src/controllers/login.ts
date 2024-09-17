@@ -1,6 +1,6 @@
-import { Elysia, t } from "elysia";
+import { Elysia } from "elysia";
 import jwt from "@elysiajs/jwt";
-import { addUser, getUserByEmail } from "@server/src/models/userFunctions";
+import { addUser } from "@server/src/models/userFunctions";
 import { userInsertDTO } from "@server/src/types";
 
 export const loginController = new Elysia({ prefix: "user" })
@@ -9,49 +9,6 @@ export const loginController = new Elysia({ prefix: "user" })
       name: "jwt",
       secret: Bun.env.JWT_SECRET as string,
     }),
-  )
-  .post(
-    "/login",
-    async ({ body, jwt, cookie: { auth } }) => {
-      // Agarrar el usuario por su email (se usa como identificador). Habria que ver si se puede loguear con nombre de usuario como hacer
-      const user = await getUserByEmail(body.email);
-
-      // Si hay un usuario proceder a chequear la contraseña
-      if (user) {
-        const correctPassword = await Bun.password.verify(
-          body.password,
-          user.password,
-        );
-
-        if (correctPassword) {
-          // Agregar JWT de authentication a la cookie
-          auth.value = await jwt.sign({
-            user: user.id,
-            type: user.type,
-          });
-          auth.httpOnly = true;
-          auth.sameSite = true;
-          return { message: "Logueado" };
-        }
-      }
-
-      return { message: "Usuario o constaseña incorrecta" };
-    },
-    {
-      body: t.Object(
-        {
-          email: t.String(),
-          password: t.String(),
-        },
-        {
-          description: "Expected an username and password",
-        },
-      ),
-      detail: {
-        summary: "Sign in the user",
-        tags: ["authentication"],
-      },
-    },
   )
   .post(
     "/signup",
