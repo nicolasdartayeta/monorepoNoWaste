@@ -15,13 +15,15 @@ export const unauthenticatedUsersController = new Elysia({ prefix: "user" })
     async ({ body }) => {
       // Agarrar el ususario del body
       const newUser = body;
+      if (newUser.password) {
+        // Hashear la contraseña
+        newUser.password = await Bun.password.hash(newUser.password);
 
-      // Hashear la contraseña
-      newUser.password = await Bun.password.hash(newUser.password);
-
-      // Persistir ususario en la DB
-      const result = await addUser(newUser);
-      return { agregado: result };
+        // Persistir ususario en la DB
+        const result = await addUser(newUser);
+        return { agregado: result };
+      }
+      return { error: "no se especifico una contraseña" };
     },
     {
       body: userInsertDTO,

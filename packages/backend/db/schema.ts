@@ -12,23 +12,37 @@ import {
   AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable(
+export const user = pgTable(
   "users",
   {
     id: uuid("id").defaultRandom().primaryKey().notNull(),
     type: varchar("type", { enum: ["admin", "client", "merchant"] }).notNull(),
     firstname: varchar("name", { length: 30 }).notNull(),
     lastname: varchar("lastname", { length: 30 }).notNull(),
-    email: text("email").notNull(),
-    password: text("password").notNull(),
+    email: text("email"),
+    password: text("password"),
   },
   (table) => ({
     emailUniqueIndex: uniqueIndex("emailUniqueIndex").on(lower(table.email)),
   }),
 );
 
-export type User = typeof users.$inferSelect; // return type when queried
-export type NewUser = typeof users.$inferInsert; // insert type
+export type User = typeof user.$inferSelect; // return type when queried
+export type NewUser = typeof user.$inferInsert; // insert type
+
+export const userIdentity = pgTable("userIdentity", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  user_id: uuid("user_id")
+    .notNull()
+    .references(() => user.id),
+  provider: varchar("provider", { length: 100 }).notNull(),
+  provider_id: varchar("provider_id", { length: 100 }).notNull(),
+  email: text("email"),
+  created_at: timestamp("creation_date").notNull().defaultNow(),
+});
+
+export type UserIdentity = typeof userIdentity.$inferSelect; // return type when queried
+export type NewUserIdentity = typeof userIdentity.$inferInsert; // insert type
 
 export const commerce = pgTable("commerce", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
@@ -40,13 +54,13 @@ export const commerce = pgTable("commerce", {
   active: boolean("active").notNull().default(true),
   owner_id: uuid("owner_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => user.id),
 });
 
 export type Commerce = typeof commerce.$inferSelect; // return type when queried
 export type NewCommerce = typeof commerce.$inferInsert; // insert type
 
-export const products = pgTable("products", {
+export const product = pgTable("product", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
   description: varchar("description", { length: 200 }).notNull(),
@@ -57,8 +71,8 @@ export const products = pgTable("products", {
     .references(() => collections.id),
 });
 
-export type Product = typeof products.$inferSelect; // return type when queried
-export type NewProduct = typeof products.$inferInsert; // insert type
+export type Product = typeof product.$inferSelect; // return type when queried
+export type NewProduct = typeof product.$inferInsert; // insert type
 
 export const collections = pgTable("collections", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
@@ -85,7 +99,7 @@ export const productHasCategory = pgTable(
   {
     product_id: uuid("product_id")
       .notNull()
-      .references(() => products.id),
+      .references(() => product.id),
     category_id: uuid("category_id")
       .notNull()
       .references(() => proudctCategory.id),
@@ -100,27 +114,27 @@ export const productHasCategory = pgTable(
 export type ProductHasCategory = typeof productHasCategory.$inferSelect; // return type when queried
 export type NewProductHasCategory = typeof productHasCategory.$inferInsert; // insert type
 
-export const purchases = pgTable("purchases", {
+export const purchase = pgTable("purchase", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   user_id: uuid("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => user.id),
   state: varchar("state", { length: 30 }).notNull(),
   purchase_date: timestamp("purchase_date").notNull().defaultNow(),
 });
 
-export type Purchase = typeof purchases.$inferSelect; // return type when queried
-export type NewPurchase = typeof purchases.$inferInsert; // insert type
+export type Purchase = typeof purchase.$inferSelect; // return type when queried
+export type NewPurchase = typeof purchase.$inferInsert; // insert type
 
 export const purchaseHasProduct = pgTable(
   "purchase_has_product",
   {
     purchase_id: uuid("purchase_id")
       .notNull()
-      .references(() => purchases.id),
+      .references(() => purchase.id),
     product_id: uuid("product_id")
       .notNull()
-      .references(() => products.id),
+      .references(() => product.id),
   },
   (table) => {
     return {
