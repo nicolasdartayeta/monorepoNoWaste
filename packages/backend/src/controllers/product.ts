@@ -13,8 +13,8 @@ export const productController = new Elysia({prefix : "/product"})
 
     const formattedDate = new Date(expiration_date).toISOString().split("T")[0];
     try {
-      const collection = await db.query.collections.findFirst({where: eq(collections.id, collection_id)});
-      if (collection){
+      const collectionExists = await db.query.collections.findFirst({where: eq(collections.id, collection_id)});
+      if (collectionExists){
         await db.insert(product).values({
           name,
           description,
@@ -33,7 +33,6 @@ export const productController = new Elysia({prefix : "/product"})
   {
     body: t.Object(
       {
-        id: t.Optional(t.String()),
         name: t.String(),
         description: t.String(),
         price: t.String(),
