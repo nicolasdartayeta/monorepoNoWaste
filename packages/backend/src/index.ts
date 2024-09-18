@@ -1,12 +1,13 @@
 import { Elysia } from "elysia";
-import { logger } from "./controllers/logger";
+import { logger } from "@server/src/controllers/logger";
 import { swagger } from "@elysiajs/swagger";
-import { loginController } from "./controllers/login";
-import { userController } from "./controllers/users";
+import { unauthenticatedUsersController } from "@server/src/controllers/unauthenticatedUsers";
+import { authenticatedUsersController } from "@server/src/controllers/authenticatedUsers";
 import jwt from "@elysiajs/jwt";
-import { commerceController } from "./controllers/commerce";
-import { productController } from "./controllers/product";
-import { cors } from '@elysiajs/cors';
+import { commerceController } from "@server/src/controllers/commerce";
+// import { productController } from "@server/src/controllers/product";
+import { cors } from "@elysiajs/cors";
+import { authController } from "@server/src/controllers/auth";
 
 const app = new Elysia()
   .use(
@@ -15,12 +16,14 @@ const app = new Elysia()
       secret: Bun.env.JWT_SECRET as string,
     }),
   )
+  .get("/", () => {
+    return "gordo puto";
+  })
   .use(cors()) // Enable CORS
   .use(logger())
   .use(swagger())
-  .use(loginController)
-  .use(commerceController)
-  .use(productController)
+  .use(authController)
+  .use(unauthenticatedUsersController)
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {
@@ -29,7 +32,8 @@ const app = new Elysia()
         if (!user) return "Authenticate first";
       },
     },
-    (app) => app.use(userController),
+    (app) => app.use(authenticatedUsersController).use(commerceController),
+    // .use(productController),
   )
   .listen(3000);
 

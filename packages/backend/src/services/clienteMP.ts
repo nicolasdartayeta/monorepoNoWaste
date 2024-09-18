@@ -1,12 +1,14 @@
-import { MercadoPagoConfig, Payment, Preference } from "mercadopago";
+ import { MercadoPagoConfig} from "mercadopago";
 
-export const cliente = new MercadoPagoConfig({
-    accessToken: "APP_USR-5394970218339872-091121-d128902e84cfff37e38d243deb573d36-1986359106",
-    options:{
-        timeout: 5000,
-        idempotencyKey: "fasasfasxzc",//
-        //plataformId: string,
-        //integratorId: "dev_24c65fb163bf11ea96500242ac130004",
-        //corporationId: string
-    },
-});
+ export const cliente = new MercadoPagoConfig({
+   accessToken:
+     "APP_USR-7526583093473610-091723-79f313a1a5d78b1a813397f9b9e9a745-1994524719",
+   options: {
+     timeout: 5000,
+     idempotencyKey: "fasasfasxzc", 
+     integratorId: "dev_24c65fb163bf11ea96500242ac130004",
+     /* plataformId: string,
+     
+     corporationId: string */
+   },
+ });

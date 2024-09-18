@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { db } from '@server/db/db'
-import { collections, products } from "@server/db/schema";
+import { collections, product } from "@server/db/schema";
 import { eq } from "drizzle-orm";
 
 export const productController = new Elysia({prefix : "/product"})
@@ -15,7 +15,7 @@ export const productController = new Elysia({prefix : "/product"})
     try {
       const collection = await db.query.collections.findFirst({where: eq(collections.id, collection_id)});
       if (collection){
-        await db.insert(products).values({
+        await db.insert(product).values({
           name,
           description,
           price,
@@ -47,7 +47,7 @@ export const productController = new Elysia({prefix : "/product"})
 })
 .get("/", async () => {
   try{
-    const result = await db.select().from(products);
+    const result = await db.select().from(product);
     if (result.length > 0){
         return result
     }else{
@@ -60,7 +60,7 @@ export const productController = new Elysia({prefix : "/product"})
 .get("/:id", async (req) => {
   try{
       const { id } = req.params;
-      const result = await db.select().from(products).where(eq(products.id, id));
+      const result = await db.select().from(product).where(eq(product.id, id));
       if (result.length > 0){
           return result
       }else{
@@ -71,7 +71,7 @@ export const productController = new Elysia({prefix : "/product"})
     }
 })
 .get("/total-products", async () => {
-    const result = await db.select().from(products);
+    const result = await db.select().from(product);
     return result.length
 })
 .put("/:id", async (req) => {
@@ -83,7 +83,7 @@ export const productController = new Elysia({prefix : "/product"})
   }
 
   try {
-    const updatedProduct = await db.update(products)
+    const updatedProduct = await db.update(product)
       .set({
         name,
         description,
@@ -91,7 +91,7 @@ export const productController = new Elysia({prefix : "/product"})
         expiration_date: new Date(expiration_date).toISOString(),
         collection_id
       })
-      .where(eq(products.id, id))
+      .where(eq(product.id, id))
       .returning();
 
     if (updatedProduct.length === 0) {
@@ -120,7 +120,7 @@ export const productController = new Elysia({prefix : "/product"})
 .delete("/:id", async (req) => {
     const { id } = req.params;
     try{
-      await db.delete(products).where(eq(products.id, id));
+      await db.delete(product).where(eq(product.id, id));
     }catch(error){
       return {error: "error al eliminar producto"}
     }
