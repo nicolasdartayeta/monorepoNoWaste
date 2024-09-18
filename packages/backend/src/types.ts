@@ -16,8 +16,12 @@ export const commerceInsertDTO = t.Omit(Commerce, [
 const updCommerce = createInsertSchema(commerce);
 export const commerceUpdateDTO = t.Required(updCommerce, ["id"]);
 
-const productInsertSchema = createInsertSchema(product);
+export const productInsertSchema = createInsertSchema(product);
 export const productInsertDTO = t.Omit(productInsertSchema, [
+  "id",
+  "collection_id",
+]);
+export const productDTO = t.Required(productInsertSchema, [
   "id",
   "collection_id",
 ]);
