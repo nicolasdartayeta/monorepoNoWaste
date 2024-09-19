@@ -85,14 +85,14 @@ export const collections = pgTable("collections", {
 export type Collection = typeof collections.$inferSelect; // return type when queried
 export type NewCollection = typeof collections.$inferInsert; // insert type
 
-export const proudctCategory = pgTable("product_category", {
+export const productCategory = pgTable("product_category", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
   description: varchar("description", { length: 200 }).notNull(),
 });
 
-export type ProductCategory = typeof proudctCategory.$inferSelect; // return type when queried
-export type NewProductCategory = typeof proudctCategory.$inferInsert; // insert type
+export type ProductCategory = typeof productCategory.$inferSelect; // return type when queried
+export type NewProductCategory = typeof productCategory.$inferInsert; // insert type
 
 export const productHasCategory = pgTable(
   "product_has_category",
@@ -102,7 +102,7 @@ export const productHasCategory = pgTable(
       .references(() => product.id),
     category_id: uuid("category_id")
       .notNull()
-      .references(() => proudctCategory.id),
+      .references(() => productCategory.id),
   },
   (table) => {
     return {
@@ -146,7 +146,53 @@ export const purchaseHasProduct = pgTable(
 export type PurchaseHasProduct = typeof purchaseHasProduct.$inferSelect; // return type when queried
 export type NewPurchaseHasProduct = typeof purchaseHasProduct.$inferInsert; // insert type
 
+//ROLES
+
+export const role = pgTable("role", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  name: varchar("name", { length: 50 }).notNull(),
+});
+
+export type Role = typeof role.$inferSelect; // return type when queried
+export type NewRole = typeof role.$inferInsert; // insert type
+
+export const userRole = pgTable("roleUser", {
+  role_id: uuid("role_id")
+    .notNull()
+    .references(() => role.id),
+  user_id: uuid("user_id")
+    .notNull()
+    .references(() => user.id),
+});
+
+export type UserRole = typeof userRole.$inferSelect; // return type when queried
+export type NewUserRole = typeof userRole.$inferInsert; // insert type
+
+export const permission = pgTable("permission", {
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
+  table_name: varchar("table_name", { length: 50 }).notNull(),
+  action: varchar("action", { enum: ["create", "read" ,"update","delete"] }).notNull(),
+});
+
+export type Permission = typeof permission.$inferSelect; // return type when queried
+export type NewPermission = typeof permission.$inferInsert; // insert type
+
+export const rolePermission = pgTable("rolePermission", {
+  role_id: uuid("role_id")
+    .notNull()
+    .references(() => role.id),
+  permission_id: uuid("permission_id")
+    .notNull()
+    .references(() => permission.id),
+});
+
+export type RolePermission = typeof rolePermission.$inferSelect; // return type when queried
+export type NewRolePermission = typeof rolePermission.$inferInsert;
+
 // custom lower function
 export function lower(email: AnyPgColumn): SQL {
   return sql`lower(${email})`;
 }
+
+
+
