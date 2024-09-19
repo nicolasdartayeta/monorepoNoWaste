@@ -89,9 +89,9 @@ export async function removeRolePermission(
 }
 
 export async function checkPermission(): Promise<boolean> {
-// user_id: string,
-// table_name: string,
-// action: string,
+  // user_id: string,
+  // table_name: string,
+  // action: string,
   // const result = await db
   //   .select()
   //   .from(userRole)
