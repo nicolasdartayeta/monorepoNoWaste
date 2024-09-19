@@ -23,8 +23,13 @@ export async function addUserIdentity(
   return (await db.insert(userIdentity).values(newUserIdentity).returning())[0];
 }
 
-export async function getUserByEmail(email: string): Promise<User> {
-  return (await db.select().from(user).where(eq(user.email, email)))[0];
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const result = await db.select().from(user).where(eq(user.email, email));
+
+  if (!result || result.length === 0) {
+    return null;
+  }
+  return result[0];
 }
 
 export async function getUserByIdentityProvider(
@@ -46,4 +51,21 @@ export async function getUserByIdentityProvider(
     return null;
   }
   return result[0].users;
+}
+
+export async function existisUserIdentity(
+  provider_id: string,
+  provider: string,
+): Promise<boolean> {
+  const result = await db
+    .select()
+    .from(userIdentity)
+    .where(
+      and(
+        eq(userIdentity.provider, provider),
+        eq(userIdentity.provider_id, provider_id),
+      ),
+    );
+
+  return result.length >= 0;
 }
