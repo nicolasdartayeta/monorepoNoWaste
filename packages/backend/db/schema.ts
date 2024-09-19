@@ -171,7 +171,9 @@ export type NewUserRole = typeof userRole.$inferInsert; // insert type
 export const permission = pgTable("permission", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   table_name: varchar("table_name", { length: 50 }).notNull(),
-  action: varchar("action", { enum: ["create", "read" ,"update","delete"] }).notNull(),
+  action: varchar("action", {
+    enum: ["create", "read", "update", "delete"],
+  }).notNull(),
 });
 
 export type Permission = typeof permission.$inferSelect; // return type when queried
@@ -193,6 +195,3 @@ export type NewRolePermission = typeof rolePermission.$inferInsert;
 export function lower(email: AnyPgColumn): SQL {
   return sql`lower(${email})`;
 }
-
-
-

@@ -1,24 +1,36 @@
 import { Elysia, t } from "elysia";
 import { crearCompra, resolverWebhook } from "../services/purchasesServices";
-import {productDTO} from "../types";
- export const purchasesController = new Elysia({ prefix: "/purchases" })
-   .post("/",async ({body}) => {return await crearCompra(body);},
+import { productDTO } from "../types";
+export const purchasesController = new Elysia({ prefix: "/purchases" })
+  .post(
+    "/",
+    async ({ body }) => {
+      return await crearCompra(body);
+    },
     {
       body: t.Array(productDTO),
-    })
-   .post("/webhook", async ({body}) => {return await resolverWebhook(body)},{
-     body: t.Object(
-       {
-         id: t.String(),
-         live_mode: t.String(),
-         type: t.String(),
-         action: t.String(),
-         data: t.Object({id: t.String()})
-       },
-       {
-         description: "Expected MercadoPago WebHook",
-       },
-     ),})
+    },
+  )
+  .post(
+    "/webhook",
+    async ({ body }) => {
+      return await resolverWebhook(body);
+    },
+    {
+      body: t.Object(
+        {
+          id: t.String(),
+          live_mode: t.String(),
+          type: t.String(),
+          action: t.String(),
+          data: t.Object({ id: t.String() }),
+        },
+        {
+          description: "Expected MercadoPago WebHook",
+        },
+      ),
+    },
+  );
 
 /*  async function crearCompra(body : BodyType ) {
    const preference = new Preference(cliente);
@@ -59,7 +71,7 @@ import {productDTO} from "../types";
      preferenceId: response.id,
    };
  } */
- /* async function resolverWebhook(body){
+/* async function resolverWebhook(body){
      const { id, live_mode, type, date_created, user_id, api_version, action, data } = body;
      console.log(data);
      console.log(JSON.stringify(body.data));
