@@ -88,24 +88,36 @@ export async function removeRolePermission(
   return false;
 }
 
-export async function checkPermission(): Promise<boolean> {
-  // user_id: string,
-  // table_name: string,
-  // action: string,
-  // const result = await db
-  //   .select()
-  //   .from(userRole)
-  //   .where(eq(userRole.user_id, user_id));
-
-  // for (const index in result) {
-  // aca tengo que iterar por los roles y fijarme si tienen el permiso para la tabla, tengo que hacer un join
-  // let join = await db
-  //   .select()
-  //   .from(rolePermission)
-  //   .innerJoin(permission, eq(rolePermission.permission_id, permission.id))
-  //   .where(eq(rolePermission.role_id, result[index].role_id));
-
-  // result[index].role_id;
-  // }
-  return true;
+export async function checkPermission(
+  user_id: string,
+  table_name: string,
+  action: string,
+): Promise<boolean> {
+  //Recupero los roles del usuario pasado por parametro
+  const result = await db
+    .select()
+    .from(userRole)
+    .where(eq(userRole.user_id, user_id));
+  let permitido = false;
+  //Para cada rol, debo controlar si tiene permiso para realizar la accion que desea.
+  for (const index in result) {
+    //Recupero los permisos para ese rol.
+    const join = await db
+      .select()
+      .from(rolePermission)
+      .innerJoin(permission, eq(rolePermission.permission_id, permission.id))
+      .where(eq(rolePermission.role_id, result[index].role_id));
+    //Para cada permiso controlo si corresponde a la accion y tabla que solicita el usuario.
+    for (const item of join) {
+      const { permission: perm } = item;
+      if (perm.table_name === table_name && perm.action === action) {
+        permitido = true;
+        break;
+      }
+    }
+    if (permitido) {
+      break;
+    }
+  }
+  return permitido;
 }
