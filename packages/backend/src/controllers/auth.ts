@@ -3,23 +3,13 @@ import Elysia, { redirect, t } from "elysia";
 import {
   addUser,
   addUserIdentity,
+  existisUserIdentity,
   getUserByEmail,
-  getUserByIdentityProvider,
 } from "@server/src/models/userFunctions";
 
-import { google } from "googleapis";
-import { randomBytes } from "crypto";
 import { NewUserIdentity } from "@server/db/schema";
-
-const googleOauthFile = await Bun.file("clienteGoogle.json").json();
-
-const oauth2ClientGoogle = new google.auth.OAuth2(
-  googleOauthFile.web.client_id,
-  googleOauthFile.web.client_secret,
-  googleOauthFile.web.redirect_uris[0],
-);
-
-const scopes = ["openid"];
+import { CallbackParamsType, generators } from "openid-client";
+import { GoogleClient } from "@server/src/utils/auth";
 
 export const authController = new Elysia({ prefix: "auth" })
   .use(
@@ -30,7 +20,7 @@ export const authController = new Elysia({ prefix: "auth" })
   )
   .get(
     "/password",
-    async ({ body, jwt, cookie: { auth } }) => {
+    async ({ body, jwt, cookie }) => {
       // Agarrar el usuario por su email (se usa como identificador). Habria que ver si se puede loguear con nombre de usuario como hacer
       const user = await getUserByEmail(body.email);
 
@@ -43,12 +33,12 @@ export const authController = new Elysia({ prefix: "auth" })
 
         if (correctPassword) {
           // Agregar JWT de authentication a la cookie
-          auth.value = await jwt.sign({
+          cookie.auth.value = await jwt.sign({
             user: user.id,
             type: user.type,
           });
-          auth.httpOnly = true;
-          auth.sameSite = true;
+          cookie.auth.httpOnly = true;
+          cookie.auth.sameSite = true;
           return { message: "Logueado" };
         }
       }
@@ -76,16 +66,16 @@ export const authController = new Elysia({ prefix: "auth" })
       .get(
         "",
         async ({ jwt, cookie: { authRequest } }) => {
-          const state = randomBytes(32).toString("hex");
+          const nonce = generators.nonce();
 
           authRequest.value = await jwt.sign({
-            state: state,
+            nonce: nonce,
           });
 
-          const authURL = oauth2ClientGoogle.generateAuthUrl({
-            scope: scopes,
-            include_granted_scopes: true,
-            state: state,
+          const authURL = GoogleClient.authorizationUrl({
+            scope: "openid email profile",
+            response_mode: "form_post",
+            nonce,
           });
 
           console.log("redirigido");
@@ -98,84 +88,81 @@ export const authController = new Elysia({ prefix: "auth" })
           },
         },
       )
-      .get(
+      .post(
         "/callback",
-        async ({ jwt, cookie: { authRequest, auth }, query }) => {
-          // codigo que devuelve google como queryParam con el que desp se piden los tokens
-          const code = query.code;
+        async ({
+          jwt,
+          body: { id_token },
+          cookie: { authRequest, auth },
+          request,
+        }) => {
+          const nonce = await jwt.verify(authRequest.value);
+          authRequest.remove();
 
-          const JWTstate = await jwt.verify(authRequest.value);
+          if (!nonce)
+            return "No hay JWT con authrequest o no coincide con el state devuelto por google!";
 
-          if (JWTstate && JWTstate.state === query.state) {
-            // Eliminar JWT
-            authRequest.remove();
+          const params: CallbackParamsType = { id_token };
 
-            const { tokens } = await oauth2ClientGoogle.getToken(code);
+          const tokenSet = await GoogleClient.callback(request.url, params, {
+            nonce: nonce.nonce as string,
+          });
 
-            // verificar token de openid. el ticket tiene los datos del usuario
-            const ticket = await oauth2ClientGoogle.verifyIdToken({
-              idToken: tokens.id_token as string,
-              audience: googleOauthFile.web.client_id,
-            });
+          const userIdentityData = tokenSet.claims();
 
-            const ticketPayload = ticket.getPayload();
+          if (!userIdentityData.email)
+            return "No se aceptan proveedores que no proporcionen email";
 
-            if (ticketPayload) {
-              // checkear si ya se cuenta con el proveedor en la db
-              let user = await getUserByIdentityProvider(
-                ticketPayload.sub,
-                ticketPayload.iss,
-              );
+          // Nico hizo un diagrama de flujo de como va el login. Verlo antes de tocar el codigo
+          let user = await getUserByEmail(userIdentityData.email);
 
-              if (!user) {
-                // checkear si hay algun usuario con ese mail
-                user = await getUserByEmail(ticketPayload.email as string);
+          if (!user) {
+            // agregarlo a la db
+            const newUser = {
+              type: "client" as "admin" | "client" | "merchant",
+              firstname: userIdentityData.given_name
+                ? userIdentityData.given_name
+                : "sin nombre",
+              lastname: userIdentityData.family_name
+                ? userIdentityData.family_name
+                : "sin apellido",
+              email: userIdentityData.email,
+            };
 
-                if (!user) {
-                  const newUser = {
-                    type: "client" as "admin" | "client" | "merchant",
-                    firstname: ticketPayload.given_name
-                      ? ticketPayload.given_name
-                      : "sin nombre",
-                    lastname: ticketPayload.family_name
-                      ? ticketPayload.family_name
-                      : "sin apellido",
-                    email: ticketPayload.email as string,
-                  };
-
-                  user = await addUser(newUser);
-                }
-
-                const userIdentity: NewUserIdentity = {
-                  user_id: user.id,
-                  provider_id: ticketPayload.sub,
-                  provider: ticketPayload.iss,
-                };
-
-                await addUserIdentity(userIdentity);
-              }
-
-              // Agregar JWT de authentication a la cookie
-              auth.value = await jwt.sign({
-                user: user.id,
-                type: user.type,
-              });
-              auth.httpOnly = true;
-              auth.sameSite = true;
-
-              return { message: "Logueado" };
-            }
+            user = await addUser(newUser);
           }
 
-          return {
-            message:
-              "No hay JWT con authrequest o no coincide con el state devuelto por google",
-          };
+          // Si no esta el proveedor asociado al mail guardarlo
+          if (
+            !(await existisUserIdentity(
+              userIdentityData.sub,
+              userIdentityData.iss,
+            ))
+          ) {
+            const userIdentity: NewUserIdentity = {
+              user_id: user.id,
+              provider_id: userIdentityData.sub,
+              provider: userIdentityData.iss,
+            };
+            addUserIdentity(userIdentity);
+          }
+
+          // Agregar JWT de authentication a la cookie
+          auth.value = await jwt.sign({
+            user: user.id,
+            type: user.type,
+          });
+          auth.httpOnly = true;
+          auth.sameSite = true;
+
+          return { message: "Logueado" };
         },
         {
-          query: t.Object({
-            state: t.String(),
-            code: t.String(),
+          body: t.Object({
+            id_token: t.String(),
+          }),
+          cookie: t.Cookie({
+            authRequest: t.String(),
           }),
           detail: {
             summary: "Callback for google OAuth",

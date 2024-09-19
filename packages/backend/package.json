@@ -20,6 +20,7 @@
     "eslint-plugin-drizzle": "^0.2.3",
     "googleapis": "^144.0.0",
     "mercadopago": "^2.0.15",
+    "openid-client": "^5.7.0",
     "postgres": "^3.4.4",
     "typebox": "^0.0.1",
     "typescript": "^5.5.4"
