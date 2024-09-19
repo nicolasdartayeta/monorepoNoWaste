@@ -3,6 +3,8 @@ import { db } from '@server/db/db'
 import { collections, product } from "@server/db/schema";
 import { eq } from "drizzle-orm";
 
+//ey amigo pelado
+
 export const productController = new Elysia({prefix : "/product"})
 .post("/", async ({body}) => {
     const { name, description, price, expiration_date, collection_id } = body;
