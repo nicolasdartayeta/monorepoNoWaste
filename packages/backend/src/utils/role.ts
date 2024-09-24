@@ -24,6 +24,14 @@ export async function deleteRole(role_id: string): Promise<boolean> {
   return false;
 }
 
+export async function getUserRole(user_id: string) {
+  const result = await db
+    .select({ role_id: userRole.role_id })
+    .from(userRole)
+    .where(eq(userRole.user_id, user_id));
+  if (result) return result;
+}
+
 export async function createPermission(
   newPermission: NewPermission,
 ): Promise<Permission> {
@@ -42,8 +50,28 @@ export async function deletePermission(
   return false;
 }
 
-export async function addUserRole(newUserRole: NewUserRole): Promise<UserRole> {
-  return (await db.insert(userRole).values(newUserRole).returning())[0];
+export async function addUserRole(
+  user_id: string,
+  role_name: string,
+): Promise<UserRole> {
+  const result = await db.select().from(role).where(eq(role.name, role_name));
+
+  if (result) {
+    return (
+      await db
+        .insert(userRole)
+        .values({ user_id: user_id, role_id: result[0].id })
+        .returning()
+    )[0];
+  } else {
+    const new_role_id = await createRole(role_name);
+    return (
+      await db
+        .insert(userRole)
+        .values({ user_id: user_id, role_id: new_role_id.id })
+        .returning()
+    )[0];
+  }
 }
 
 export async function removeUserRole(

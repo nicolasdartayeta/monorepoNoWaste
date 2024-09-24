@@ -16,7 +16,6 @@ export const user = pgTable(
   "users",
   {
     id: uuid("id").defaultRandom().primaryKey().notNull(),
-    type: varchar("type", { enum: ["admin", "client", "merchant"] }).notNull(),
     firstname: varchar("name", { length: 30 }).notNull(),
     lastname: varchar("lastname", { length: 30 }).notNull(),
     email: text("email"),

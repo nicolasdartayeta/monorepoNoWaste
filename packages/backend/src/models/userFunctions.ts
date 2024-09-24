@@ -69,3 +69,10 @@ export async function existisUserIdentity(
 
   return result.length >= 0;
 }
+
+export async function deleteUser(user_id: string): Promise<boolean> {
+  const result = await db.delete(user).where(eq(user.id, user_id)).returning();
+
+  if (result) return true;
+  return false;
+}
