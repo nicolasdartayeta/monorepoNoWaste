@@ -7,6 +7,7 @@ import {
   getUserByEmail,
 } from "@server/src/models/userFunctions";
 
+import { addUserRole } from "../utils/role";
 import { NewUserIdentity } from "@server/db/schema";
 import { CallbackParamsType, generators } from "openid-client";
 import { GoogleClient } from "@server/src/utils/auth";
@@ -35,7 +36,6 @@ export const authController = new Elysia({ prefix: "auth" })
           // Agregar JWT de authentication a la cookie
           cookie.auth.value = await jwt.sign({
             user: user.id,
-            type: user.type,
           });
           cookie.auth.httpOnly = true;
           cookie.auth.sameSite = true;
@@ -119,7 +119,6 @@ export const authController = new Elysia({ prefix: "auth" })
           if (!user) {
             // agregarlo a la db
             const newUser = {
-              type: "client" as "admin" | "client" | "merchant",
               firstname: userIdentityData.given_name
                 ? userIdentityData.given_name
                 : "sin nombre",
@@ -129,7 +128,9 @@ export const authController = new Elysia({ prefix: "auth" })
               email: userIdentityData.email,
             };
 
+            //El registro con google es para clientes, hay que ver si lo cambiamos.
             user = await addUser(newUser);
+            await addUserRole(user.id, "client");
           }
 
           // Si no esta el proveedor asociado al mail guardarlo
@@ -150,7 +151,6 @@ export const authController = new Elysia({ prefix: "auth" })
           // Agregar JWT de authentication a la cookie
           auth.value = await jwt.sign({
             user: user.id,
-            type: user.type,
           });
           auth.httpOnly = true;
           auth.sameSite = true;
