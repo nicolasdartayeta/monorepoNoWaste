@@ -8,6 +8,7 @@ import { commerceController } from "@server/src/controllers/commerce";
 // import { productController } from "@server/src/controllers/product";
 import { cors } from "@elysiajs/cors";
 import { authController } from "@server/src/controllers/auth";
+import { productController } from "@server/src/controllers/product";
 
 const app = new Elysia()
   .use(
@@ -24,6 +25,9 @@ const app = new Elysia()
   .use(swagger())
   .use(authController)
   .use(unauthenticatedUsersController)
+  .use(commerceController)
+  .use(authenticatedUsersController)
+  .use(productController)
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {
@@ -32,8 +36,8 @@ const app = new Elysia()
         if (!user) return "Authenticate first";
       },
     },
-    (app) => app.use(authenticatedUsersController).use(commerceController),
-    // .use(productController),
+    (app) => app,
+    
   )
   .listen(3000);
 

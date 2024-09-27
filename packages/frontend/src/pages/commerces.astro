@@ -1,4 +1,5 @@
 ---
+import '@/styles/globals.css'
 const API_URL = "http://localhost:3000/commerce";
 interface Comercio {
   id: string; 
@@ -12,31 +13,22 @@ interface Comercio {
 }
 const response = await fetch(API_URL);
 const comercios: Comercio[] = await response.json();
+import Layout from "@/layouts/Layout.astro";
+import CommerceCard from "@/components/CommerceCard.astro";
+import comercioImage from "@/images/images.png"
 ---
+<Layout title= "Comercios">
+  <ul class="space-y-4">
+    {comercios.map((comercio) => (
+      <CommerceCard 
+      name={comercio.name}
+      address={comercio.address}
+      image={comercioImage.src} 
+      />
+    ))}
+  </ul>
+</Layout>
+    
 
-<html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lista de Comercios</title>
-    <link rel="stylesheet" href="/styles/tailwind.css" />
-  </head>
-  <body class="bg-gray-100 text-gray-900">
-    <main class="container mx-auto p-4">
-      <h1 class="text-3xl font-bold mb-6">Lista de Comercios</h1>
-      
-      <ul class="space-y-4">
-        {comercios.map((comercio) => (
-          <li class="p-4 bg-white shadow rounded-md">
-            <h2 class="text-xl font-semibold">{comercio.name}</h2>
-            <p>{comercio.description}</p>
-            <p>Dirección: {comercio.address}</p>
-            <p>Ciudad: {comercio.city}</p>
-          </li>
-        ))}
-      </ul>
-    </main>
-  </body>
-</html>
 
 

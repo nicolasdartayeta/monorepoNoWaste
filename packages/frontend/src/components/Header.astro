@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import logoImage from "@/images/logo.png"
 ---
-<header class="bg-white shadow-md">
+<header class="bg-white shadow-lg">
     <div class="container mx-auto px-4 py-6 flex justify-between items-center">
       <div class="flex items-center space-x-4">
         <a href="/" class="text-2xl font-bold text-gray-800">
@@ -15,11 +15,12 @@ import logoImage from "@/images/logo.png"
           />
         </a>
         <div class="flex space-x-2">
-          <button id="btnComercios" class="px-4 py-2 bg-lightGreen text-white rounded hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-opacity-50">
+          <button class="font-medium flex px-4 py-2 bg-lightGreen text-white rounded-3xl hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-lime-600 focus:ring-opacity-50">
             Comercios
           </button>
-          <button id="btnProductos" class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+          <button class="flex font-medium px-4 py-2 bg-gray-300 text-gray-700 rounded-3xl hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
             Productos
+            </svg>
           </button>
         </div>
       </div>
@@ -32,7 +33,7 @@ import logoImage from "@/images/logo.png"
       </form>
       <nav>
         <ul class="flex space-x-4">
-          <li><a href="/perfil" class="text-gray-600 hover:text-gray-800">Perfil</a></li>
+          <li><a href="/perfil" class="text-gray-600 hover:text-gray-800">Perfil</a></li> <!--Ver de reemplar Perfil por el nombre del user -->
         </ul>
       </nav>
     </div>
