@@ -2,31 +2,36 @@
 import '@/styles/globals.css'
 import { ModeToggle } from '@/components/ModeToggle';
 import LoginCard from '@/components/loginCard.astro';
+import Layout from '@/layouts/Layout.astro';
 ---
 
-<script is:inline>
-	const getThemePreference = () => {
-		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-			return localStorage.getItem('theme');
-		}
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-	const isDark = getThemePreference() === 'dark';
-	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
-
-	if (typeof localStorage !== 'undefined') {
-		const observer = new MutationObserver(() => {
-			const isDark = document.documentElement.classList.contains('dark');
-			localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		});
-		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+<!-- <script is:inline>
+const getThemePreference = () => {
+	if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+		return localStorage.getItem('theme');
 	}
+	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+const isDark = getThemePreference() === 'dark';
+document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+
+if (typeof localStorage !== 'undefined') {
+	const observer = new MutationObserver(() => {
+		const isDark = document.documentElement.classList.contains('dark');
+		localStorage.setItem('theme', isDark ? 'dark' : 'light');
+	});
+	observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+}
 </script>
 
 <html lang="en">
-	<body>
-      <h1>Astro</h1>
-	  <ModeToggle client:load />
-	  <LoginCard />
-	</body>
-</html>
+<body>
+	<h1>Astro</h1>
+	<ModeToggle client:load />
+	<LoginCard />
+</body>
+</html> -->
+
+<Layout title = "NoWaska">
+
+</Layout>
