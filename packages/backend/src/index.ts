@@ -37,7 +37,6 @@ const app = new Elysia()
       },
     },
     (app) => app,
-    
   )
   .listen(3000);
 
