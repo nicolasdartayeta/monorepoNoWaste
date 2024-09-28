@@ -1,5 +1,6 @@
 ---
 import Header from '@/components/Header.astro';
+import '@/styles/globals.css'
 interface Props {
 	title: string;
 }
@@ -19,14 +20,27 @@ const { title } = Astro.props;
 	</head>
 	<Header />
 	<body>
-		<div>
-			<main>
-				<slot />
-			</main>
+		<div class="flex flex-col md:flex-row">
+			<div class="w-full md:w-1/6 p-4">
+				<slot name="Primer Columna">
+					<!-- Contenido de la primera columna -->
+				</slot>
+			</div>
+	
+			<div class="w-full md:w-2/3 p-4">
+				<slot>
+					<!-- Contenido principal -->
+				</slot>
+			</div>
+	
+			<div class="w-full md:w-1/6 p-4">
+				<slot name="Tercer Columna">
+					<!-- Contenido de la tercera columna -->
+				</slot>
+			</div>
 		</div>
 	</body>
 </html>
-
 <style is:global>
 	html {
 		font-family: system-ui, sans-serif;

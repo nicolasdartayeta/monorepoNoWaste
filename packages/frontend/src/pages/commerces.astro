@@ -1,5 +1,8 @@
 ---
-import '@/styles/globals.css'
+import Layout from "@/layouts/Layout.astro";
+import CommerceCard from "@/components/CommerceCard.astro";
+import comercioImage from "../../public/images.png"
+
 const API_URL = "http://localhost:3000/commerce";
 interface Comercio {
   id: string; 
@@ -13,20 +16,19 @@ interface Comercio {
 }
 const response = await fetch(API_URL);
 const comercios: Comercio[] = await response.json();
-import Layout from "@/layouts/Layout.astro";
-import CommerceCard from "@/components/CommerceCard.astro";
-import comercioImage from "@/images/images.png"
+
 ---
+
 <Layout title= "Comercios">
-  <ul class="space-y-4">
-    {comercios.map((comercio) => (
-      <CommerceCard 
-      name={comercio.name}
-      address={comercio.address}
-      image={comercioImage.src} 
-      />
-    ))}
-  </ul>
+  <div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-4">
+      {comercios.map((comercio) => (
+        <CommerceCard 
+        name={comercio.name}
+        address={comercio.address}
+        image={comercioImage.src} 
+        />
+      ))}
+  </div>
 </Layout>
     
 
