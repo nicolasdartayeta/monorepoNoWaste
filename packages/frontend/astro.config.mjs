@@ -11,6 +11,7 @@ export default defineConfig({
       applyBaseStyles: false,
     }),
   ],
+  output: 'server', // Habilita SSR para Bun // Usa el adaptador de Bun para SSR
   server: {
     host: "0.0.0.0",
     hmr: { clientPort: 4321 },
