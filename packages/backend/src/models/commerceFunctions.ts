@@ -7,7 +7,16 @@ export async function getAllCommerces() {
 }
 
 export async function getCommerceById(commerceId: string) {
-  return await db.select().from(commerce).where(eq(commerce.id, commerceId));
+  const comercios = await db
+    .select()
+    .from(commerce)
+    .where(eq(commerce.id, commerceId));
+
+  if (comercios.length == 0) {
+    return null;
+  } else {
+    return comercios[0];
+  }
 }
 
 export async function addCommerce(Commerce: NewCommerce): Promise<boolean> {

@@ -22,11 +22,13 @@ const comercios: Comercio[] = await response.json();
 <Layout title= "Comercios">
   <div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-4">
       {comercios.map((comercio) => (
-        <CommerceCard 
-        name={comercio.name}
-        address={comercio.address}
-        image={comercioImage.src} 
-        />
+        <a href={`/commerces/${comercio.id}`}>
+          <CommerceCard 
+            name={comercio.name}
+            address={comercio.address}
+            image={comercioImage.src} 
+          />
+        </a>
       ))}
   </div>
 </Layout>
