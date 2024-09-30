@@ -59,7 +59,7 @@ export const commerce = pgTable("commerce", {
 export type Commerce = typeof commerce.$inferSelect; // return type when queried
 export type NewCommerce = typeof commerce.$inferInsert; // insert type
 
-export const product = pgTable("product", {
+export const product = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: varchar("name", { length: 30 }).notNull(),
   description: varchar("description", { length: 200 }).notNull(),

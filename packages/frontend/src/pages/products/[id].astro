@@ -1,0 +1,29 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import {api} from '@/lib/api'
+import type { Product } from '@server/db/schema';
+
+
+interface Props{
+    id: string;
+}
+
+const {id} = Astro.params;
+const producto: Product[] | undefined = await api.get(`/product/${id}`);
+console.log(producto);
+
+---
+
+{
+producto 
+? (
+    <Layout title={`${producto[0].id}`}>
+      <p>{producto[0].name}</p>
+    </Layout>
+  ) 
+: (
+    <Layout title="Product not found">
+      <p>Sorry, the product could not be found.</p>
+    </Layout>
+  )
+}

@@ -1,0 +1,32 @@
+---
+import ProductCard from '@/components/ProductCard.astro';
+import Layout from '@/layouts/Layout.astro';
+import {api} from '@/lib/api';
+import type { Product } from '@server/db/schema';
+// interface Product {
+//   id: string; 
+//   name: string;
+//   description: string;
+//   price: string;
+//   expiration_date: Date;
+//   collection_id: string; 
+// }
+
+const productos: Product[] | undefined = await api.get("/product");
+console.log(productos);
+---
+
+<Layout title="NoWaste">
+    <div class = "grid grid-cols-1 gap-2 p-4">
+        {
+        productos?.map((producto) => (
+            <ProductCard
+                id={producto.id}
+                name={producto.name} 
+                description={producto.description}
+                price={producto.price}
+                expiration_date={producto.expiration_date}/>
+        ))
+        }
+    </div>  
+</Layout>

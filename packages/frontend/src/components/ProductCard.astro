@@ -1,0 +1,19 @@
+---
+interface Props {
+    id: string;
+	name: string;
+    description: string;
+    price: string;
+    expiration_date: string;
+}
+const { id, name, description, price, expiration_date } = Astro.props;
+---
+
+<a href={`/products/${id}`} class="w-auto h-28 hover:scale-105 transition-transform flex flex-row mx-20 rounded-lg bg-white shadow-lg">
+    <img src="../../medialuna-prueba.jpg" class="w-1/3 object-cover rounded-l-lg" alt="imagen-producto"/>
+    <div class="relative w-2/3 p-5">
+        <h3 class="text-lg font-bold uppercase">{name}</h3>
+        <p class="font-light text-base">{description}</p>
+        <h1 class="absolute right-5 top-5 text-2xl font-bold">${price}</h1>
+        <p class="font-light text-base">fecha de caducidad: {expiration_date}</p>
+</a>

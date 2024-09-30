@@ -5,7 +5,6 @@ import { unauthenticatedUsersController } from "@server/src/controllers/unauthen
 import { authenticatedUsersController } from "@server/src/controllers/authenticatedUsers";
 import jwt from "@elysiajs/jwt";
 import { commerceController } from "@server/src/controllers/commerce";
-// import { productController } from "@server/src/controllers/product";
 import { cors } from "@elysiajs/cors";
 import { authController } from "@server/src/controllers/auth";
 import { productController } from "@server/src/controllers/product";
@@ -18,7 +17,7 @@ const app = new Elysia()
     }),
   )
   .get("/", () => {
-    return "gordo puto";
+    return "app";
   })
   .use(cors()) // Enable CORS
   .use(logger())
