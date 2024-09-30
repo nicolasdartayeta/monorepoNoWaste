@@ -1,6 +1,6 @@
 import { createInsertSchema } from "drizzle-typebox";
 import { commerce } from "@server/db/schema";
-import { product, user } from "@server/db/schema";
+import { product, user, mailSubscription } from "@server/db/schema";
 import { t } from "elysia";
 
 const userInsertSchema = createInsertSchema(user);
@@ -25,3 +25,9 @@ export const productDTO = t.Required(productInsertSchema, [
 
 const updProduct = createInsertSchema(product);
 export const productUpdateDTO = t.Required(updProduct, ["id"]);
+
+export const mailSubscriptionInsertSchema =
+  createInsertSchema(mailSubscription);
+export const mailSubscriptionDTO = t.Required(mailSubscriptionInsertSchema, [
+  "mail",
+]);
