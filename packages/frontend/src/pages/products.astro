@@ -19,7 +19,8 @@ console.log(productos);
 <Layout title="NoWaste">
     <div class = "grid grid-cols-1 gap-2 p-4">
         {
-        productos?.map((producto) => (
+        productos
+        ? productos.map((producto) => (
             <ProductCard
                 id={producto.id}
                 name={producto.name} 
@@ -27,6 +28,7 @@ console.log(productos);
                 price={producto.price}
                 expiration_date={producto.expiration_date}/>
         ))
+        : <p>No hay productos en la base de datos</p>
         }
     </div>  
 </Layout>

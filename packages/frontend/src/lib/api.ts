@@ -16,8 +16,8 @@ const client = {
     }
   },
   post: async (
-    endpoint: never,
-    data: never,
+    endpoint: string,
+    data: any,
   ): Promise<typeof productDTO | undefined> => {
     try {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
@@ -33,7 +33,7 @@ const client = {
       console.error("Error in POST request:", error);
     }
   },
-  delete: async (endpoint: never) => {
+  delete: async (endpoint: string) => {
     try {
       const response = await fetch(`http://localhost:3000${endpoint}`, {
         method: "DELETE",
