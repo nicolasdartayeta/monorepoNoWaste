@@ -8,6 +8,7 @@ import { commerceController } from "@server/src/controllers/commerce";
 import { cors } from "@elysiajs/cors";
 import { authController } from "@server/src/controllers/auth";
 import { productController } from "@server/src/controllers/product";
+import { subscriptionController } from "./controllers/subscription";
 
 const app = new Elysia()
   .use(
@@ -27,6 +28,7 @@ const app = new Elysia()
   .use(commerceController)
   .use(authenticatedUsersController)
   .use(productController)
+  .use(subscriptionController)
   .guard(
     {
       async beforeHandle({ jwt, cookie: { auth } }) {

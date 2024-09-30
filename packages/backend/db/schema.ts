@@ -194,3 +194,10 @@ export type NewRolePermission = typeof rolePermission.$inferInsert;
 export function lower(email: AnyPgColumn): SQL {
   return sql`lower(${email})`;
 }
+
+export const mailSubscription = pgTable("mailSubscription", {
+  mail: varchar("mail", { length: 300 }).notNull().primaryKey(),
+});
+
+export type MailSubscription = typeof mailSubscription.$inferSelect; // return type when queried
+export type NewMailSubscription = typeof mailSubscription.$inferInsert; // insert type
