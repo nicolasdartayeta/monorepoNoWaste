@@ -1,5 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import comercioImage from "../../../public/empa.jpg"
+import comercioLogo from "../../../public/images.png"
 const {id} = Astro.params;
 const API_URL = `http://localhost:3000/commerce/${id}`;
 interface Comercio {
@@ -31,8 +33,13 @@ try {
 ---
 
 <Layout title="Comercio">
-    {comercio ? (
-        <div class="p-6 mx-auto bg-lightGreen rounded-xl shadow-md space-y-4 text-center">
+  {comercio ? (
+      <div class="relative p-6 mx-auto rounded-xl shadow-md space-y-4 text-center">
+          <div 
+            class="absolute inset-0 bg-cover bg-center rounded-xl" 
+            style={`background-image: url(${comercioImage.src}); opacity: 0.3;`}
+          ></div>
+          <div class="relative z-10">
             <h1 class="text-2xl font-bold text-gray-600">
                 {comercio.name}
             </h1>
@@ -43,12 +50,13 @@ try {
                 <p class="font-medium">Dirección:</p>
                 <p>{comercio.address}, {comercio.city}</p>
             </div>
-        </div>
-    ) : (
-        <div class="p-6 mx-auto bg-red-100 rounded-xl shadow-md space-y-4 text-center">
-            <h1 class="text-2xl font-bold text-red-600">
-                El comercio buscado no existe
-            </h1>
-        </div>
-    )}
+          </div>
+      </div>
+  ) : (
+      <div class="p-6 mx-auto bg-red-100 rounded-xl shadow-md space-y-4 text-center">
+          <h1 class="text-2xl font-bold text-red-600">
+              El comercio buscado no existe
+          </h1>
+      </div>
+  )}
 </Layout>

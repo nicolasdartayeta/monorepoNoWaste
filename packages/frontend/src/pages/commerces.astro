@@ -1,7 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import CommerceCard from "@/components/CommerceCard.astro";
-import comercioImage from "../../public/images.png"
+import comercioLogo from "../../public/images.png"
+import comercioImage from "../../public/empa.jpg"
 
 const API_URL = "http://localhost:3000/commerce";
 interface Comercio {
@@ -20,12 +21,13 @@ const comercios: Comercio[] = await response.json();
 ---
 
 <Layout title= "Comercios">
-  <div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 p-4">
+  <div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-10">
       {comercios.map((comercio) => (
         <a href={`/commerces/${comercio.id}`}>
           <CommerceCard 
             name={comercio.name}
             address={comercio.address}
+            logo={comercioLogo.src}
             image={comercioImage.src} 
           />
         </a>
