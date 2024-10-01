@@ -1,11 +1,11 @@
 import type { Product } from "@server/db/schema";
-import { productDTO } from "@server/src/types";
+import type { productDTO } from "@server/src/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const client = {
   get: async (endpoint: string): Promise<Product[] | undefined> => {
     try {
-      const response = await fetch(`http://localhost:3000${endpoint}`);
+      const response = await fetch(`${endpoint}`);
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }

@@ -6,6 +6,7 @@ import {
   addProduct,
   deleteProduct,
   getAllProducts,
+  getAllProductsByFilter,
   getProductById,
   updateProduct,
 } from "@server/src/models/productFunctions";
@@ -24,8 +25,12 @@ export const productController = new Elysia({ prefix: "/product" })
         "Se espera: name, description, price, expiration_date, and collection_id",
     },
   )
-  .get("/", async () => {
-    return await getAllProducts();
+  .get("/", async ({ query }) => {
+    if (query.name) {
+      return await getAllProductsByFilter(query.name);
+    } else {
+      return await getAllProducts();
+    }
   })
   .get("/:id", async (req) => {
     const { id } = req.params;

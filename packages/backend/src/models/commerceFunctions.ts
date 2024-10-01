@@ -1,6 +1,6 @@
 import { NewCommerce, Commerce, commerce } from "@server/db/schema";
 import { db } from "@server/db/db";
-import { eq, and } from "drizzle-orm";
+import { eq, and, ilike } from "drizzle-orm";
 
 export async function getAllCommerces() {
   return await db.select().from(commerce);
@@ -64,9 +64,9 @@ export async function getCommerceByFilter(
     .from(commerce)
     .where(
       and(
-        Name ? eq(commerce.name, Name) : undefined,
-        City ? eq(commerce.city, City) : undefined,
-        Address ? eq(commerce.address, Address) : undefined,
+        Name ? ilike(commerce.name, `%${Name}%`) : undefined,
+        City ? ilike(commerce.city, City) : undefined,
+        Address ? ilike(commerce.address, Address) : undefined,
       ),
     );
   return result;

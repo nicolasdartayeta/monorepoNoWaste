@@ -1,5 +1,5 @@
 import { collections, NewProduct, Product, product } from "@server/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and, ilike } from "drizzle-orm";
 import { db } from "@server/db/db";
 
 export async function addProduct(prod: NewProduct) {
@@ -35,6 +35,25 @@ export async function getAllProducts() {
       return result;
     } else {
       return { message: "No hay productos en la base de datos" };
+    }
+  } catch (error) {
+    console.error(error);
+    return { error: "Error al obtener la lista de productos" };
+  }
+}
+
+export async function getAllProductsByFilter(name?: string) {
+  try {
+    const result = await db
+      .select()
+      .from(product)
+      .where(and(name ? ilike(product.name, `%${name}%`) : undefined));
+    if (result.length > 0) {
+      return result;
+    } else {
+      return {
+        message: "No hay productos en la base de datos que cumplan el filtro",
+      };
     }
   } catch (error) {
     console.error(error);
