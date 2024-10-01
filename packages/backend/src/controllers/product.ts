@@ -21,25 +21,54 @@ export const productController = new Elysia({ prefix: "/product" })
     },
     {
       body: productInsertDTO,
-      description:
-        "Se espera: name, description, price, expiration_date, and collection_id",
+      detail: {
+        summary: "Insert a new Product",
+        tags: ["products"],
+      },
     },
   )
-  .get("/", async ({ query }) => {
-    if (query.name) {
-      return await getAllProductsByFilter(query.name);
-    } else {
-      return await getAllProducts();
-    }
-  })
-  .get("/:id", async (req) => {
-    const { id } = req.params;
-    return await getProductById(id);
-  })
-  .get("/total-products", async () => {
-    const result = await db.select().from(product);
-    return result.length;
-  })
+  .get(
+    "/",
+    async ({ query }) => {
+      if (query.name) {
+        return await getAllProductsByFilter(query.name);
+      } else {
+        return await getAllProducts();
+      }
+    },
+    {
+      detail: {
+        summary: "Get a product by filter || getAll()",
+        tags: ["products"],
+      },
+    },
+  )
+  .get(
+    "/:id",
+    async (req) => {
+      const { id } = req.params;
+      return await getProductById(id);
+    },
+    {
+      detail: {
+        summary: "Get a product using ID",
+        tags: ["products"],
+      },
+    },
+  )
+  .get(
+    "/total-products",
+    async () => {
+      const result = await db.select().from(product);
+      return result.length;
+    },
+    {
+      detail: {
+        summary: "Get total products",
+        tags: ["products"],
+      },
+    },
+  )
   .put(
     "/:id",
     async ({ body }) => {
@@ -49,10 +78,21 @@ export const productController = new Elysia({ prefix: "/product" })
     },
     {
       body: productUpdateDTO,
-      description:
-        "Se espera: name, description, price, expiration_date, y collection_id",
+      detail: {
+        summary: "Update a product",
+        tags: ["products"],
+      },
     },
   )
-  .delete("/:id", async ({ params: { id } }) => {
-    return await deleteProduct(id);
-  });
+  .delete(
+    "/:id",
+    async ({ params: { id } }) => {
+      return await deleteProduct(id);
+    },
+    {
+      detail: {
+        summary: "Delete a product",
+        tags: ["products"],
+      },
+    },
+  );
