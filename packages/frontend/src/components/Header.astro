@@ -1,4 +1,6 @@
 ---
+import SearchBar from "./SearchBar.astro";
+
 ---
 <header class="bg-white shadow-lg flex z-10 fixed top-0 left-0 right-0">
     <div class="w-full p-3 flex justify-around ">
@@ -22,13 +24,8 @@
           </svg>
         </a>
       </div>
-      <form class="w-1/3">
-        <input 
-          type="search" 
-          placeholder="Buscar..." 
-          class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-opacity-40 shadow-inner shadow-gray-200"
-        />
-      </form>
+      <SearchBar/>
+
       <nav class="place-content-center">
         <ul class="flex space-x-4">
           <li><a href="/profile" class="text-gray-600 text-bold hover:text-gray-800">Perfil</a></li> <!--Ver de reemplar Perfil por el nombre del user -->

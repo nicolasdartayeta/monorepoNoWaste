@@ -1,0 +1,35 @@
+---
+const query = Astro.url.searchParams;
+const result = query.get("name");
+---
+<form class="w-1/3">
+  <input
+    type="search" 
+    name="search"
+    id="search-input"
+    placeholder= "Buscar por nombre..."
+    class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-opacity-40 shadow-inner shadow-gray-200"
+  />  
+</form>
+
+<script>
+  const searchInput = document.getElementById("search-input")
+
+  const form = document.querySelector("form");
+  form?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    console.log(e.target);
+    const formData = new FormData(form);
+    const searchTerm = formData.get("search")?.toString();
+    if (!searchTerm || searchTerm.length === 0) return;
+    const url = new URL("/search", window.location.origin);
+    url.searchParams.set("name", searchTerm);
+    window.location.assign(url.toString());
+    console.log(formData.get("search"));
+  })
+
+  searchInput?.addEventListener("input", (e) => {
+    console.log("CAMBIO");
+  })
+</script>
+

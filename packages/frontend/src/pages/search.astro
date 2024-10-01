@@ -1,0 +1,88 @@
+---
+import CommerceCard from '@/components/CommerceCard.astro';
+import ProductCard from '@/components/ProductCard.astro';
+import Layout from '@/layouts/Layout.astro';
+import {api} from '@/lib/api';
+import type { Product } from '@server/db/schema';
+import comercioLogo from "../../public/images.png"
+import comercioImage from "../../public/empa.jpg"
+
+const API_URL = new URL("http://localhost:3000");
+interface Comercio {
+  id: string; 
+  name: string;
+  description: string;
+  address: string;
+  city: string;
+  creation_date: string; 
+  active: boolean;
+  owner_id: string; 
+}
+const params = Astro.url.searchParams;
+const searchTerm = params.get("name");
+console.log(searchTerm);
+let productos: Product[] | undefined;
+let comercios: Comercio[] | undefined;
+  // Check if the searchTerm exists and make the API request
+  if (searchTerm) {
+    API_URL.searchParams.set("name", searchTerm);
+    API_URL.pathname = `${API_URL.pathname}product`
+    productos = await api.get(API_URL.toString());
+    
+    const API_URL_C = new URL("http://localhost:3000/commerce");
+    
+    API_URL_C.searchParams.set("name", searchTerm);
+    const response = await fetch(API_URL_C);
+    comercios = await response.json();
+    console.log(productos); 
+  }  
+
+/* 
+const API_URL = "http://localhost:3000/commerce";
+interface Comercio {
+  id: string; 
+  name: string;
+  description: string;
+  address: string;
+  city: string;
+  creation_date: string; 
+  active: boolean;
+  owner_id: string; 
+}
+const response = await fetch(API_URL);
+const comercios: Comercio[] = await response.json(); */
+---
+
+<Layout title="NoWaste">
+  <p>Productos</p>
+  <div class = "grid grid-cols-1 gap-2 p-4">
+    {
+    productos && productos.length > 0
+    ? productos.map((producto) => (
+        <ProductCard
+            id={producto.id}
+            name={producto.name} 
+            description={producto.description}
+            price={producto.price}
+            expiration_date={producto.expiration_date}/>
+    ))
+    : <p>No hay productos en la base de datos</p>
+    }
+</div> 
+<p>Comercios</p>
+<div class = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-10">
+  {
+  comercios && comercios.length > 0
+  ? comercios.map((comercio) => (
+    <a href={`/commerces/${comercio.id}`}>
+      <CommerceCard 
+        name={comercio.name}
+        address={comercio.address}
+        logo={comercioLogo.src}
+        image={comercioImage.src} 
+      />
+    </a>))
+  : <p> No hay comercios cargados </p>
+  }
+</div> 
+</Layout>

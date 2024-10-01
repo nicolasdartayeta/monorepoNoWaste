@@ -12,14 +12,15 @@ import type { Product } from '@server/db/schema';
 //   collection_id: string; 
 // }
 
-const productos: Product[] | undefined = await api.get("/product");
+const API_URL = new URL("http://localhost:3000/product");
+const productos: Product[] | undefined = await api.get(API_URL.toString());
 console.log(productos);
 ---
 
 <Layout title="NoWaste">
     <div class = "grid grid-cols-1 gap-2 p-4">
         {
-        productos
+        productos && productos.length > 0
         ? productos.map((producto) => (
             <ProductCard
                 id={producto.id}

@@ -41,14 +41,23 @@ if (typeof localStorage !== 'undefined') {
 
 <LayoutLanding title="NoWaste">
 	<main class="min-h-screen flex flex-col overflow-y-auto">
-		<header class="p-5 fixed top-0 left-0 right-0 bg-white z-50 flex justify-between shadow-lg">
-			<div class="ml-10 flex items-center">
-				<img src="../../landing/nowaste-monografia.png" alt="Your Logo" class="h-8 " />
-			</div>
-			<button class="bg-lightGreen py-2 px-3 text-white font-bold rounded-lg">Log In</button>
-		</header>
 
-		<section id="home" class="min-h-screen flex flex-col pt-20 place-content-center">
+		<header class="bg-white shadow-lg flex z-50 fixed top-0 left-0 right-0">
+			<div class="w-full p-3 flex justify-between mx-5">
+				<a href="/" class="text-xl font-bold text-gray-800 place-content-center">
+					<img 
+					src="../../nowaste-monograma.png"
+					alt="NOWASTE Logo" 
+					width={200} 
+					height={40} 
+					class="h-8 py-1 w-auto object-contain" 
+				  />
+				</a>
+			<button class="bg-lightGreen py-2 px-3 text-white font-bold rounded-lg">Log In</button>
+			</div>
+		  </header>
+
+		<section id="home" class="min-h-screen flex flex-col pt-16 place-content-center">
 			<img src="../../landing/nowaste-logo.png" class="container h-28 w-auto mx-auto mb-5 drop-shadow-xl shadow-black"></img>
 			<div class="container mx-auto px-4 text-center">
 				<p class="text-xl md:text-2xl mb-8">Conectando comerciantes con clientes</p>

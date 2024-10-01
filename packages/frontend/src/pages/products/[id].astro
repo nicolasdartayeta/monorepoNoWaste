@@ -9,7 +9,8 @@ interface Props{
 }
 
 const {id} = Astro.params;
-const producto: Product[] | undefined = await api.get(`/product/${id}`);
+const url = new URL(`http://localhost:3000/product/${id}`);
+const producto: Product[] | undefined = await api.get(url.toString());
 console.log(producto);
 
 ---
