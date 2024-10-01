@@ -20,6 +20,7 @@
     "eslint-plugin-drizzle": "^0.2.3",
     "googleapis": "^144.0.0",
     "mercadopago": "^2.0.15",
+    "nodemailer": "^6.9.15",
     "openid-client": "^5.7.0",
     "postgres": "^3.4.4",
     "typebox": "^0.0.1",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/nodemailer": "^6.4.16",
     "bun-types": "latest",
     "drizzle-kit": "^0.24.2",
     "eslint": "^9.9.1",
