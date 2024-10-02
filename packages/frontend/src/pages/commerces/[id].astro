@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import ProductCard from "@/components/ProductCard.astro";
 import comercioImage from "../../../public/empa.jpg"
 import comercioLogo from "../../../public/images.png"
 const {id} = Astro.params;
-const API_URL = `http://localhost:3000/commerce/${id}`;
+const COMMERCE_API_URL = `http://localhost:3000/commerce/${id}`;
+const PRODUCTS_API_URL = `http://localhost:3000/commerce/${id}/products`;
 interface Comercio {
   id: string; 
   name: string;
@@ -14,13 +16,29 @@ interface Comercio {
   active: boolean;
   owner_id: string; 
 }
+interface Producto {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  expiration_date: string;
+}
+
 let comercio: Comercio | null = null;
+let productos: Producto[] = [];
 try {
-  const response = await fetch(API_URL);
+  const response = await fetch(COMMERCE_API_URL);
   if (response.ok) {
     const data = await response.json();
     if (data) {
       comercio = data;
+      const productosResponse = await fetch(PRODUCTS_API_URL);
+      if (productosResponse.ok) {
+        const productosData = await productosResponse.json();
+        productos = productosData;
+      } else {
+        console.log("Error al obtener los productos:", productosResponse.statusText);
+      }
     } else {
       console.log("La respuesta es válida pero el cuerpo está vacío.");
     }
@@ -54,8 +72,7 @@ try {
         <div class="text-gray-600 flex items-start mt-4">
           <p class="font-medium mr-2">Dirección:</p>
           <p>{comercio.address}, {comercio.city}</p>
-        </div>
-        
+        </div> 
       </div>
     </div>
   ) : (
@@ -64,5 +81,26 @@ try {
         El comercio buscado no existe
       </h1>
     </div>
+  )}
+  {productos.length > 0 ? (
+    <div class="relative z-10 mt-6">
+      <h2 class="text-xl font-semibold text-gray-700">Productos:</h2>
+      <ul>
+        {productos.map((producto) => (
+          <li class="mt-4">
+            <ProductCard 
+              id={producto.id}
+              name={producto.name}
+              description={producto.description}
+              price={producto.price}
+              expiration_date={producto.expiration_date}
+              >
+            </ProductCard>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <p class="relative z-10 mt-6 text-gray-600">No hay productos disponibles.</p>
   )}
 </Layout>

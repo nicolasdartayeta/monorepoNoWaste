@@ -1,9 +1,9 @@
 import { Elysia } from "elysia";
 import { db } from "@server/db/db";
 import { product } from "@server/db/schema";
-import { productInsertDTO, productUpdateDTO } from "../types";
+import { /* productInsertDTO, */ productUpdateDTO } from "../types";
 import {
-  addProduct,
+  /* addProduct, */
   deleteProduct,
   getAllProducts,
   getAllProductsByFilter,
@@ -12,7 +12,7 @@ import {
 } from "@server/src/models/productFunctions";
 
 export const productController = new Elysia({ prefix: "/product" })
-  .post(
+/*   .post(
     "/",
     async ({ body }) => {
       const newProduct = body;
@@ -26,7 +26,7 @@ export const productController = new Elysia({ prefix: "/product" })
         tags: ["products"],
       },
     },
-  )
+  ) */
   .get(
     "/",
     async ({ query }) => {
