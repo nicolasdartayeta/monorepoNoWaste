@@ -3,10 +3,11 @@ interface Props {
   name: string;
   address: string;
   description: string;
+  city:string;
   logo: string;
   image: string;
 }
-const { name, address, description, logo, image } = Astro.props;
+const { name, address, description, city, logo, image } = Astro.props;
 ---
 
 <div class="relative w-full rounded-lg overflow-hidden shadow-md transition-all duration-300 bg-white group hover:shadow-xl">
@@ -18,8 +19,8 @@ const { name, address, description, logo, image } = Astro.props;
   </div>
   <div class="px-4 py-6 pt-14 transition-all duration-300 group-hover:pt-16 group-hover:pb-8">
     <h2 class="font-bold text-xl mb-2 text-gray-800 transition-all duration-300 group-hover:text-2xl">{name}</h2>
-    <div class="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-2">
-      <p class="font-semibold text-gray-600 text-base">{address}</p>
+      <p class="font-semibold text-gray-600 text-base">{address}, {city}</p>
+    <div class="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-0.5">
       <p class="text-gray-700 text-sm mt-2">{description}</p>
     </div>
   </div>
