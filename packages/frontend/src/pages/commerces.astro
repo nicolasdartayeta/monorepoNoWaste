@@ -27,6 +27,7 @@ const comercios: Comercio[] = await response.json();
           <CommerceCard 
             name={comercio.name}
             address={comercio.address}
+            description={comercio.description}
             logo={comercioLogo.src}
             image={comercioImage.src} 
           />
