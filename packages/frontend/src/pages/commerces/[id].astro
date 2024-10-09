@@ -1,9 +1,10 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import comercioImage from "../../../public/empa.jpg"
+import ProductCard from "@/components/ProductCard.astro"
 import comercioLogo from "../../../public/images.png"
 const {id} = Astro.params;
-const API_URL = `http://localhost:3000/commerce/${id}`;
+const COMMERCE_API_URL = `http://localhost:3000/commerce/${id}`;
+const PRODUCTS_API_URL = `http://localhost:3000/commerce/${id}/products`;
 interface Comercio {
   id: string; 
   name: string;
@@ -14,13 +15,29 @@ interface Comercio {
   active: boolean;
   owner_id: string; 
 }
+interface Producto {
+  id: string;
+  name: string;
+  description: string;
+  price: string;
+  expiration_date: string;
+}
+
 let comercio: Comercio | null = null;
+let productos: Producto[] = [];
 try {
-  const response = await fetch(API_URL);
+  const response = await fetch(COMMERCE_API_URL);
   if (response.ok) {
     const data = await response.json();
     if (data) {
       comercio = data;
+      const productosResponse = await fetch(PRODUCTS_API_URL);
+      if (productosResponse.ok) {
+        const productosData = await productosResponse.json();
+        productos = productosData;
+      } else {
+        console.log("Error al obtener los productos:", productosResponse.statusText);
+      }
     } else {
       console.log("La respuesta es válida pero el cuerpo está vacío.");
     }
@@ -34,28 +51,27 @@ try {
 
 <Layout title="Comercio">
   {comercio ? (
-    <div class="relative p-6 mx-auto rounded-xl shadow-md max-w-3xl flex items-center">
+    <div class="h-36 z-20 left-0 right-0 top-16 fixed shadow-md flex items-center" slot="header-container">
       <div 
-        class="absolute inset-0 bg-cover bg-center rounded-xl" 
-        style={`background-image: url(${comercioImage.src}); opacity: 0.3; z-index: 0;`} 
+        class="absolute inset-0 bg-cover bg-center bg-[url('../../../public/empa.jpg')] opacity-90" 
       ></div>
       
-      <div class="relative z-10 mr-6">
-        <img class="w-32 h-32 rounded-full object-cover" src={comercioLogo.src} alt={`Imagen de ${comercio.name}`} />
-      </div>
-      
-      <div class="relative z-10 text-left p-4">
-        <h1 class="text-2xl font-bold text-gray-600 mb">
-          {comercio.name}
-        </h1>
-        <p class="text-gray-600">
-          {comercio.description}
-        </p>
-        <div class="text-gray-600 flex items-start mt-4">
-          <p class="font-medium mr-2">Dirección:</p>
-          <p>{comercio.address}, {comercio.city}</p>
+      <div class="z-10 w-1/2 pl-10 mt-24 flex flex-row space-x-2 bg-white place-content-center rounded-r-full h-28 shadow-lg">
+        <div class="z-10 place-content-center">
+          <img class="w-24 h-auto rounded-full object-cover" src={comercioLogo.src} alt={`Imagen de ${comercio.name}`} />
         </div>
         
+        <div class="text-left p-5 place-content-center">
+          <h1 class="text-3xl font-bold text-gray-600 mb">
+            {comercio.name}
+          </h1>
+          {/* <p class="text-gray-600 text-sm">
+            {comercio.description}
+          </p> */}
+          <div class="text-gray-600 text-sm flex justify-between">
+            <p>{comercio.address}, {comercio.city}</p>
+          </div> 
+        </div>
       </div>
     </div>
   ) : (
@@ -64,5 +80,26 @@ try {
         El comercio buscado no existe
       </h1>
     </div>
+  )}
+  {productos.length > 0 ? (
+    <div class="relative z-10 mt-48">
+      <h2 class="text-xl font-semibold text-gray-700">Productos:</h2>
+      <ul>
+        {productos.map((producto) => (
+          <li class="mt-4">
+            <ProductCard 
+              id={producto.id}
+              name={producto.name}
+              description={producto.description}
+              price={producto.price}
+              expiration_date={producto.expiration_date}
+              >
+            </ProductCard>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <p class="relative z-10 mt-6 text-gray-600">No hay productos disponibles.</p>
   )}
 </Layout>

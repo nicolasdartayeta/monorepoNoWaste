@@ -19,8 +19,10 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
+	<!-- <ViewTransitions /> -->
 	<Header />
 	<body>
+		<slot name="header-container"/>
 		<div class="flex flex-col md:flex-row h-screen pt-16 bg-gray-100">
 			<div class="w-full md:w-1/6 p-4">
 				<slot name="Primer Columna">

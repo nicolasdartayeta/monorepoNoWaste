@@ -65,9 +65,9 @@ export const product = pgTable("products", {
   description: varchar("description", { length: 200 }).notNull(),
   price: varchar("price", { length: 30 }).notNull(),
   expiration_date: date("expiration_date").notNull(),
-  collection_id: uuid("collection_id")
+  commerce_id: uuid("commerce_id")
     .notNull()
-    .references(() => collections.id),
+    .references(() => commerce.id),
 });
 
 export type Product = typeof product.$inferSelect; // return type when queried

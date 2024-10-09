@@ -1,4 +1,4 @@
-import { collections, NewProduct, Product, product } from "@server/db/schema";
+import { commerce, NewProduct, Product, product } from "@server/db/schema";
 import { eq, and, ilike } from "drizzle-orm";
 import { db } from "@server/db/db";
 
@@ -8,15 +8,15 @@ export async function addProduct(prod: NewProduct) {
     !prod.description ||
     !prod.price ||
     !prod.expiration_date ||
-    !prod.collection_id
+    !prod.commerce_id
   ) {
     return { error: "Se requieren todos los aprametros" };
   }
   try {
-    const collectionExists = await db.query.collections.findFirst({
-      where: eq(collections.id, prod.collection_id),
+    const commerceExists = await db.query.commerce.findFirst({
+      where: eq(commerce.id, prod.commerce_id),
     });
-    if (collectionExists) {
+    if (commerceExists) {
       await db.insert(product).values(prod);
       return { message: "Producto agregado!" };
     } else {
@@ -42,12 +42,20 @@ export async function getAllProducts() {
   }
 }
 
-export async function getAllProductsByFilter(name?: string) {
+export async function getAllProductsByFilter(
+  name?: string,
+  commerceId?: string,
+) {
   try {
     const result = await db
       .select()
       .from(product)
-      .where(and(name ? ilike(product.name, `%${name}%`) : undefined));
+      .where(
+        and(
+          name ? ilike(product.name, `%${name}%`) : undefined,
+          commerceId ? eq(product.commerce_id, commerceId) : undefined,
+        ),
+      );
     if (result.length > 0) {
       return result;
     } else {
@@ -81,7 +89,7 @@ export async function updateProduct(prod: Product) {
     !prod.description ||
     !prod.price ||
     !prod.expiration_date ||
-    !prod.collection_id
+    !prod.commerce_id
   ) {
     return { error: "Se requieren todos los parametros." };
   }
