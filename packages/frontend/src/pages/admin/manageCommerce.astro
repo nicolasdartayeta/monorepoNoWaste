@@ -3,13 +3,15 @@ import CommerceForm from "@/components/CommerceForm.astro";
 
 // Extract query parameters
 const urlParams = new URLSearchParams(Astro.url.search);
-
+console.log(urlParams);
 const id = urlParams.get('id') || '';
 const name = urlParams.get('name') || '';
 const description = urlParams.get('description') || '';
 const address = urlParams.get('address') || '';
 const city = urlParams.get('city') || '';
-const ownerId = urlParams.get('ownerId') || '';
+const owner_id = urlParams.get('owner_id') || '';
+const creation_date = urlParams.get('creation_date') || ''; // Extract creation_date
+const active = urlParams.get('active') === 'true'; // Extract active and convert to boolean
 const logo = ''; // Handle logo if necessary
 const image = ''; // Handle image if necessary
 ---
@@ -20,7 +22,9 @@ const image = ''; // Handle image if necessary
         description={description} 
         address={address} 
         city={city} 
-        ownerId={ownerId} 
+        owner_id={owner_id} 
+        creation_date={creation_date}
+        active={active}
         logo={logo} 
         image={image} 
     />

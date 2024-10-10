@@ -5,13 +5,15 @@ interface Props {
   description?: string; // Optional for editing
   address?: string; // Optional for editing
   city?: string; // Optional for editing
-  ownerId?: string; // Optional for editing
+  owner_id?: string; // Optional for editing
+  creation_date?: string; // Optional for updating
+  active?: boolean; // Optional for updating
   logo?: string; // Optional for uploading logo
   image?: string; // Optional for uploading image
 }
 
 // Destructure props with default empty values
-const { id,  name = '', description = '', address = '', city = '', ownerId = '', logo = '', image = '' } = Astro.props;
+const { id,  name = '', description = '', address = '', city = '', owner_id = '', logo = '', image = '', creation_date, active } = Astro.props;
 
 
 ---
@@ -60,12 +62,12 @@ const { id,  name = '', description = '', address = '', city = '', ownerId = '',
         required
     />
 
-    <label for="ownerId" class="block font-bold mb-2">Owner ID:</label>
+    <label for="owner_id" class="block font-bold mb-2">Owner ID:</label>
     <input
         type="text"
-        name="ownerId"
-        id="ownerId"
-        value={ownerId}
+        name="owner_id"
+        id="owner_id"
+        value={owner_id}
         placeholder="Cargar ID del dueño"
         class="border border-gray-300 rounded-md p-2 w-full mb-4"
         required
@@ -86,7 +88,28 @@ const { id,  name = '', description = '', address = '', city = '', ownerId = '',
         id="CommerceImg"
         class="border border-gray-300 rounded-md mb-4"
     />
+    {id && (
+        <>
+            <label for="creation_date" class="block font-bold mb-2">Fecha de Creación:</label>
+            <input
+                type="date"
+                name="creation_date"
+                id="creation_date"
+                value={creation_date}
+                class="border border-gray-300 rounded-md p-2 w-full mb-4"
+            />
 
+            <label class="block font-bold mb-2">Activo:</label>
+            <select
+                name="active"
+                id="active"
+                class="border border-gray-300 rounded-md p-2 w-full mb-4"
+            >
+                <option value="true" selected={active}>True</option>
+                <option value="false" selected={!active}>False</option>
+            </select>
+        </>
+    )}
     <button
         type="submit"
         id="submit"
@@ -94,3 +117,48 @@ const { id,  name = '', description = '', address = '', city = '', ownerId = '',
         { id ? 'Actualizar Comercio' : 'Agregar Comercio'}
     </button>
 </form>
+<script>
+    import {app} from '@/lib/apiTreaty';
+    
+    document.querySelector('form')?.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+        const id = new URLSearchParams(window.location.search).get('id');;
+        // Collect form data
+        const name = String((document.getElementById('name') as HTMLInputElement).value);
+        const description = String((document.getElementById('description') as HTMLInputElement).value);
+        const address = String((document.getElementById('address') as HTMLInputElement).value);
+        const city = String((document.getElementById('city') as HTMLInputElement).value);
+        const owner_id = String((document.getElementById('owner_id') as HTMLInputElement).value);
+        const creation_date = Date((document.getElementById('creation_date') as HTMLInputElement)?.value) || ''; // Default to empty string
+        const active = (document.getElementById('active') as HTMLSelectElement)?.value === 'true'; // Convert to boolean
+
+        const commerceData = {
+            id,
+            name,         // Collecting the value, not the element itself
+            description,
+            address,
+            city,
+            owner_id, // Ensure key matches the expected API field
+            creation_date: new Date(),
+            active 
+        };
+        console.log(commerceData);
+        try {
+            let response;
+
+            if (id) {
+                // If commerceId exists, update the existing commerce
+                response = await app.commerce[id].put(commerceData);    //PROBLEMA CON DATE
+            } else {
+                // If no commerceId, create a new commerce entry
+                response = await app.commerce.post(commerceData);
+            }
+            console.log(response);
+            if (response.status == 200) {
+                console.log('Commerce successfully submitted:', response.data);
+            }
+        } catch (error) {
+            console.error('Error submitting commerce:', error);
+        }
+    });
+</script>

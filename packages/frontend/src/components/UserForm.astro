@@ -51,3 +51,45 @@ const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
         {id ? 'Actualizar Usuario' : 'Agregar Usuario'}
     </button>
 </form>
+
+<script>
+    import { app } from '@/lib/apiTreaty';
+
+    document.querySelector('form')?.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const email = String((document.getElementById('email') as HTMLInputElement).value);
+        const firstName = String((document.getElementById('firstName') as HTMLInputElement).value);
+        const lastName = String((document.getElementById('lastName') as HTMLInputElement).value);
+        const id = new URLSearchParams(window.location.search).get('id');;
+        const userData = {
+            id, // Optional ID for updating
+            email,
+            firstName,
+            lastName,
+        };
+
+        console.log(userData); // For debugging
+        try {
+            let response;
+
+            if (id) {
+                // If user ID exists, update the existing user
+                //response = await app.user[id].put(userData);
+                //AGREGAR ENDPOINT EDIT USER
+            } else {
+                // If no user ID, create a new user entry
+                //response = await app.user.client.signup(userData);
+                //AGREGAR ENDPOINT PARA AGREGAR USER
+            }
+
+            console.log(response);
+            if (response.status === 200) {
+                console.log('User successfully submitted:', response.data);
+            }
+        } catch (error) {
+            console.error('Error submitting user:', error);
+        }
+    });
+</script>

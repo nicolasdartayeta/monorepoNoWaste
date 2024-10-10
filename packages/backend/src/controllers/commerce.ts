@@ -34,7 +34,7 @@ export const commerceController = new Elysia({ prefix: "/commerce" })
     },
   )
   .get(
-    "/",
+    "/all",
     async ({ query }) => {
       if (query.name || query.city || query.address) {
         return await getCommerceByFilter(query.name, query.city, query.address); //Filtra solo por los parametros que se le indica. Chequear como hacer para que sea general.
