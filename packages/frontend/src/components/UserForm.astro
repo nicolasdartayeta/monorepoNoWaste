@@ -1,0 +1,53 @@
+---
+interface Props {
+  id?: string; // Optional for editing
+  email?: string; // Optional for editing
+  firstName?: string; // Optional for editing
+  lastName?: string; // Optional for editing
+}
+
+// Destructure props with default empty values
+const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
+
+---
+<form class="p-6 bg-white rounded-lg shadow-md">
+    <label for="email" class="block font-bold mb-2">Email:</label>
+    <input
+        type="email"
+        name="email"
+        id="email"
+        value={email}
+        placeholder="Ingresar email"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="firstName" class="block font-bold mb-2">Nombre:</label>
+    <input
+        type="text"
+        name="firstName"
+        id="firstName"
+        value={firstName}
+        placeholder="Ingresar nombre"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="lastName" class="block font-bold mb-2">Apellido:</label>
+    <input
+        type="text"
+        name="lastName"
+        id="lastName"
+        value={lastName}
+        placeholder="Ingresar apellido"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <button
+        type="submit"
+        id="submit"
+        class="bg-slate-500 py-2 px-4 text-white font-bold rounded-lg hover:bg-slate-600">
+        {id ? 'Actualizar Usuario' : 'Agregar Usuario'}
+    </button>
+</form>

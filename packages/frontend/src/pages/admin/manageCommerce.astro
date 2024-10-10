@@ -1,0 +1,27 @@
+---
+import CommerceForm from "@/components/CommerceForm.astro";
+
+// Extract query parameters
+const urlParams = new URLSearchParams(Astro.url.search);
+
+const id = urlParams.get('id') || '';
+const name = urlParams.get('name') || '';
+const description = urlParams.get('description') || '';
+const address = urlParams.get('address') || '';
+const city = urlParams.get('city') || '';
+const ownerId = urlParams.get('ownerId') || '';
+const logo = ''; // Handle logo if necessary
+const image = ''; // Handle image if necessary
+---
+<div>
+    <CommerceForm 
+        id={id} 
+        name={name} 
+        description={description} 
+        address={address} 
+        city={city} 
+        ownerId={ownerId} 
+        logo={logo} 
+        image={image} 
+    />
+</div>
