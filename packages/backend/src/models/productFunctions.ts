@@ -42,7 +42,10 @@ export async function getAllProducts() {
   }
 }
 
-export async function getAllProductsByFilter(name?: string, commerceId?: string) {
+export async function getAllProductsByFilter(
+  name?: string,
+  commerceId?: string,
+) {
   try {
     const result = await db
       .select()
@@ -50,7 +53,7 @@ export async function getAllProductsByFilter(name?: string, commerceId?: string)
       .where(
         and(
           name ? ilike(product.name, `%${name}%`) : undefined,
-          commerceId ? eq(product.commerce_id,commerceId) : undefined,
+          commerceId ? eq(product.commerce_id, commerceId) : undefined,
         ),
       );
     if (result.length > 0) {

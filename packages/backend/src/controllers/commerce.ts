@@ -7,8 +7,15 @@ import {
   updateCommerce,
   getCommerceByFilter,
 } from "@server/src/models/commerceFunctions";
-import {addProduct, getAllProductsByFilter} from "@server/src/models/productFunctions";
-import { commerceInsertDTO, commerceUpdateDTO, productInsertDTO } from "@server/src/types";
+import {
+  addProduct,
+  getAllProductsByFilter,
+} from "@server/src/models/productFunctions";
+import {
+  commerceInsertDTO,
+  commerceUpdateDTO,
+  productInsertDTO,
+} from "@server/src/types";
 
 export const commerceController = new Elysia({ prefix: "/commerce" })
   .post(
@@ -100,13 +107,12 @@ export const commerceController = new Elysia({ prefix: "/commerce" })
   .get(
     "/:id/products",
     async ({ params: { id } }) => {
-      return await getAllProductsByFilter(undefined,id);
+      return await getAllProductsByFilter(undefined, id);
     },
     {
       detail: {
         summary: "Get commerce products",
         tags: ["commerces"],
       },
-    }, 
-  )
-  
+    },
+  );

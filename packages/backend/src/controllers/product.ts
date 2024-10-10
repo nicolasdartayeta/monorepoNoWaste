@@ -12,7 +12,7 @@ import {
 } from "@server/src/models/productFunctions";
 
 export const productController = new Elysia({ prefix: "/product" })
-/*   .post(
+  /*   .post(
     "/",
     async ({ body }) => {
       const newProduct = body;
