@@ -4,10 +4,11 @@ interface Props {
   email?: string; // Optional for editing
   firstName?: string; // Optional for editing
   lastName?: string; // Optional for editing
+  password?: string; // Optional for editing
 }
 
 // Destructure props with default empty values
-const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
+const { id = '', email = '', firstName = '', lastName = '', password } = Astro.props;
 
 ---
 <form class="p-6 bg-white rounded-lg shadow-md">
@@ -43,6 +44,16 @@ const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
         class="border border-gray-300 rounded-md p-2 w-full mb-4"
         required
     />
+    <label for="password" class="block font-bold mb-2">Contrasenia:</label>
+    <input
+        type="text"
+        name="password"
+        id="password"
+        value={password}
+        placeholder="Ingresar contrasenia"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
 
     <button
         type="submit"
@@ -60,14 +71,16 @@ const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
 
         // Collect form data
         const email = String((document.getElementById('email') as HTMLInputElement).value);
-        const firstName = String((document.getElementById('firstName') as HTMLInputElement).value);
-        const lastName = String((document.getElementById('lastName') as HTMLInputElement).value);
+        const firstname = String((document.getElementById('firstName') as HTMLInputElement).value);
+        const lastname = String((document.getElementById('lastName') as HTMLInputElement).value);
+        const password = String((document.getElementById('password') as HTMLInputElement).value);
         const id = new URLSearchParams(window.location.search).get('id');;
         const userData = {
             id, // Optional ID for updating
             email,
-            firstName,
-            lastName,
+            firstname,
+            lastname,
+            password,
         };
 
         console.log(userData); // For debugging
@@ -76,11 +89,11 @@ const { id = '', email = '', firstName = '', lastName = '' } = Astro.props;
 
             if (id) {
                 // If user ID exists, update the existing user
-                //response = await app.user[id].put(userData);
+                response = await app.user[':id'];
                 //AGREGAR ENDPOINT EDIT USER
             } else {
                 // If no user ID, create a new user entry
-                //response = await app.user.client.signup(userData);
+                response = await app.user.signup.client.post(userData);
                 //AGREGAR ENDPOINT PARA AGREGAR USER
             }
 

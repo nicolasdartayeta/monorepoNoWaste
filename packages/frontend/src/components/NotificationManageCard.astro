@@ -1,0 +1,94 @@
+<div class="p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-lg font-bold mb-4">Notification Manager</h2>
+    <form id="notificationForm" class="mb-4">
+        <!-- Email Subject -->
+        <label for="subject" class="block font-bold mb-2">Subject of the Email:</label>
+        <input
+            type="text"
+            name="subject"
+            id="subject"
+            placeholder="Enter email subject"
+            class="border border-gray-300 rounded-md p-2 w-full mb-4"
+            required
+        />
+
+        <!-- File Upload (Only HTML files) -->
+        <label for="notificationFile" class="block font-bold mb-2">Attachment (HTML only):</label>
+        <input
+            type="file"
+            name="notificationFile"
+            id="notificationFile"
+            accept=".html"
+            class="border border-gray-300 rounded-md p-2 w-full mb-4"
+            required
+        />
+
+        <!-- Submit Button -->
+        <button
+            type="submit"
+            class="bg-slate-500 py-2 px-4 text-white font-bold rounded-lg hover:bg-slate-600"
+        >
+            Send Notification
+        </button>
+    </form>
+
+    <!-- Notification Message Area -->
+    <div id="notificationMessage" class="hidden text-green-500 font-bold"></div>
+</div>
+<script>
+    import {app} from '@/lib/apiTreaty'
+
+    // Set maximum file size (e.g., 10 MB)
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+
+    // Handle form submission
+    document.getElementById('notificationForm')?.addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Collect form data
+        const subject = (document.getElementById('subject') as HTMLInputElement).value;
+        const fileInput = (document.getElementById('notificationFile') as HTMLInputElement);
+        const file = fileInput.files?.[0]; // Get the selected file
+
+        // Validate file extension
+        /* if (file && !file.name.endsWith('.html')) {
+            document.getElementById('errorMessage')?.innerText = "Please upload a valid HTML file.";
+            document.getElementById('errorMessage')?.classList.remove('hidden');
+            return;
+        }
+ */
+        // Validate file size
+        /* if (file && file.size > MAX_FILE_SIZE) {
+            document.getElementById('errorMessage')?.innerText = "File is too large. Maximum allowed size is 10 MB.";
+            document.getElementById('errorMessage')?.classList.remove('hidden');
+            return;
+        }
+ */
+        // Clear any previous error messages
+        document.getElementById('errorMessage')?.classList.add('hidden');
+
+        const reader = new FileReader();
+        reader.readAsText(file?);
+
+        reader.onload = function() {
+            console.log(reader.result);
+            try {
+                // Submit form data (replace `/api/notifications` with your API endpoint)
+                const response = app.subscription.sendMail.post({mail_data: reader.result,subject : subject });
+
+                if (response.ok) {
+                    // Success feedback
+                    document.getElementById('notificationMessage')?.innerText = "Notification sent successfully!";
+                    document.getElementById('notificationMessage')?.classList.remove('hidden');
+                } else {
+                    document.getElementById('errorMessage')?.innerText = "Failed to send notification.";
+                    document.getElementById('errorMessage')?.classList.remove('hidden');
+                }
+            } catch (error) {
+                document.getElementById('errorMessage')?.innerText = "Error submitting notification: " + error.message;
+                document.getElementById('errorMessage')?.classList.remove('hidden');
+            }
+        };
+        
+    });
+</script>

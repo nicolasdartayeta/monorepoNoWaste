@@ -1,9 +1,15 @@
 import { db } from "@server/db/db";
 import { mailSubscription, NewMailSubscription } from "../../db/schema";
 import nodemailer from "nodemailer";
+import { eq } from "drizzle-orm";
 
 export async function addSubscription(mail: NewMailSubscription) {
   const result = await db.insert(mailSubscription).values(mail).returning();
+  if (result) return true;
+  return false;
+}
+export async function deleteSubscription(mail: NewMailSubscription) {
+  const result = await db.delete(mailSubscription).where(eq(mailSubscription.mail, mail.mail)).returning();
   if (result) return true;
   return false;
 }

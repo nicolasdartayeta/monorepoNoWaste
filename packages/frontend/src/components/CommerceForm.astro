@@ -120,6 +120,7 @@ const { id,  name = '', description = '', address = '', city = '', owner_id = ''
 <script>
     import {app} from '@/lib/apiTreaty';
     
+    
     document.querySelector('form')?.addEventListener('submit', async function (event) {
         event.preventDefault(); // Prevent default form submission
         const id = new URLSearchParams(window.location.search).get('id');;
@@ -148,10 +149,12 @@ const { id,  name = '', description = '', address = '', city = '', owner_id = ''
 
             if (id) {
                 // If commerceId exists, update the existing commerce
+                
                 response = await app.commerce[id].put(commerceData);    //PROBLEMA CON DATE
             } else {
                 // If no commerceId, create a new commerce entry
                 response = await app.commerce.post(commerceData);
+                //response = await app.commerce.index.post(commerceData);
             }
             console.log(response);
             if (response.status == 200) {
