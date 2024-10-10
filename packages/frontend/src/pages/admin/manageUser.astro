@@ -1,0 +1,18 @@
+---
+import UserForm from "@/components/UserForm.astro";
+const urlParams = new URLSearchParams(Astro.url.search);
+
+// Extract user data from query parameters
+const id = urlParams.get('id') || '';
+const email = urlParams.get('email') || '';
+const firstName = urlParams.get('firstname') || '';
+const lastName = urlParams.get('lastname') || '';
+---
+<div>
+    <UserForm 
+        id={id ? id : undefined} 
+        email={email ? email : undefined} 
+        firstName={firstName ? firstName : undefined} 
+        lastName={lastName ? lastName : undefined} 
+    />
+</div>

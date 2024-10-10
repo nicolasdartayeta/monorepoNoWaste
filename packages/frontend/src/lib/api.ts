@@ -1,5 +1,4 @@
 import type { Product } from "@server/db/schema";
-import type { productDTO } from "@server/src/types";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const client = {
@@ -15,12 +14,9 @@ const client = {
       return undefined;
     }
   },
-  post: async (
-    endpoint: string,
-    data: any,
-  ): Promise<typeof productDTO | undefined> => {
+  post: async (endpoint: string, data: any) => {
     try {
-      const response = await fetch(`http://localhost:3000${endpoint}`, {
+      const response = await fetch(`${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -35,7 +31,7 @@ const client = {
   },
   delete: async (endpoint: string) => {
     try {
-      const response = await fetch(`http://localhost:3000${endpoint}`, {
+      const response = await fetch(`${endpoint}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });

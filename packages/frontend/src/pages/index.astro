@@ -10,6 +10,7 @@ const sections = [
   { title: "Our Services", content: "Web design, development, and more.", bgColor: "bg-yellow-200" },
   { title: "Contact", content: "Get in touch with us today!", bgColor: "bg-red-200" },
 ];
+
 ---
 
 <!-- <script is:inline>
@@ -38,7 +39,6 @@ if (typeof localStorage !== 'undefined') {
 	<LoginCard />
 </body>
 </html> -->
-
 <LayoutLanding title="NoWaste">
 	<main class="min-h-screen flex flex-col overflow-y-auto">
 
@@ -66,12 +66,12 @@ if (typeof localStorage !== 'undefined') {
 						<input 
 							type="email" 
 							placeholder="Escribi tu mail" 
-							class="flex-grow px-4 py-2 rounded-l-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500"
+							class="alert flex-grow px-4 py-2 rounded-l-lg border-2 border-gray-300 focus:outline-none focus:border-blue-500"
 							required
 						/>
 						<button 
 							type="submit"
-							class="px-6 py-2 bg-green-900 text-white rounded-r-lg hover:bg-blue-600 transition duration-300 flex items-center"
+							class="alert px-6 py-2 bg-green-900 text-white rounded-r-lg hover:bg-blue-600 transition duration-300 flex items-center"
 						>
 							<span>Anotarme</span>
 						</button>
@@ -155,3 +155,23 @@ if (typeof localStorage !== 'undefined') {
 		</footer>
 	</main>
 </LayoutLanding>
+
+<script>
+	import { api } from '@/lib/api';
+	
+	export async function postMail(email: string){
+		const API_URL = new URL("http://localhost:3000/subscription");
+		await api.post(API_URL.toString(), {mail: email});
+	}
+	// Find all buttons with the `alert` class on the page.
+	const button = document.querySelector('button.alert');
+  
+	// Handle clicks on each button.
+	if(button)
+		button.addEventListener('click', async () => {
+			const input = document.querySelector('input.alert') as HTMLInputElement;
+			const email = input?.value;
+			postMail(email)
+		});
+
+</script>

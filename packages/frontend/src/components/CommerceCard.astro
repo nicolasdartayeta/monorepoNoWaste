@@ -1,22 +1,27 @@
 ---
 interface Props {
-	name: string;
+  name: string;
   address: string;
+  description: string;
+  city:string;
   logo: string;
   image: string;
 }
-const { name, address, logo, image } = Astro.props;
+const { name, address, description, city, logo, image } = Astro.props;
 ---
 
-<div class="relative w-full max-w-md rounded-lg overflow-hidden shadow-lg hover:scale-105 transition-transform bg-white">
-  <div class="h-32 bg-sky-300 relative">
+<div class="relative w-full rounded-lg overflow-hidden shadow-md transition-all duration-300 bg-white group hover:shadow-xl">
+  <div class="h-40 bg-sky-300 relative">
     <img class="w-full h-full object-cover" src={image} alt={`Imagen de ${name}`} />
-    <div class="absolute -bottom-12 left-4 w-24 h-24 rounded-full bg-white p-1 shadow-md">
-      <img class="w-full h-full rounded-full object-cover"  src={logo} alt={`Logo de ${name}`} />
+    <div class="absolute -bottom-10 left-4 w-20 h-20 rounded-full bg-white p-1 shadow-md transition-all duration-300 group-hover:-bottom-12 group-hover:w-24 group-hover:h-24">
+      <img class="w-full h-full rounded-full object-cover" src={logo} alt={`Logo de ${name}`} />
     </div>
   </div>
-  <div class="px-4 py-4 pt-16">
-    <h2 class="font-bold text-2xl mb-1 text-gray-800">{name}</h2>
-    <p class="text-gray-600 text-sm">{address}</p>
+  <div class="px-4 py-6 pt-14 transition-all duration-300 group-hover:pt-16 group-hover:pb-8">
+    <h2 class="font-bold text-xl mb-2 text-gray-800 transition-all duration-300 group-hover:text-2xl">{name}</h2>
+      <p class="font-semibold text-gray-600 text-base">{address}, {city}</p>
+    <div class="overflow-hidden transition-all duration-300 max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 group-hover:mt-0.5">
+      <p class="text-gray-700 text-sm mt-2">{description}</p>
+    </div>
   </div>
 </div>

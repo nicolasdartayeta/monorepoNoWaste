@@ -1,0 +1,14 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import CommerceManageCard from '@/components/CommerceManageCard.astro';
+import UserManageCard from '@/components/UserManageCard.astro';
+import { app } from '@/lib/apiTreaty';
+
+const users = await app.user.all.get();
+
+
+---
+<Layout title="No Waste">
+    <CommerceManageCard />
+    <UserManageCard />
+</Layout>

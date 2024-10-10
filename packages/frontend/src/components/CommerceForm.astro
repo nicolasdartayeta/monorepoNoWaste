@@ -1,0 +1,96 @@
+---
+interface Props {
+    id?: string; // Optional for editing
+  name?: string; // Optional for editing
+  description?: string; // Optional for editing
+  address?: string; // Optional for editing
+  city?: string; // Optional for editing
+  ownerId?: string; // Optional for editing
+  logo?: string; // Optional for uploading logo
+  image?: string; // Optional for uploading image
+}
+
+// Destructure props with default empty values
+const { id,  name = '', description = '', address = '', city = '', ownerId = '', logo = '', image = '' } = Astro.props;
+
+
+---
+<form class="p-6 bg-white rounded-lg shadow-md">
+    <label for="name" class="block font-bold mb-2">Nombre del Comercio:</label>
+    <input
+        type="text"
+        name="name"
+        id="name"
+        value={name}
+        placeholder="Ingresar nombre del comercio"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="description" class="block font-bold mb-2">Descripcion:</label>
+    <input
+        type="text"
+        name="description"
+        id="description"
+        value={description}
+        placeholder="Agregar descripcion"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="address" class="block font-bold mb-2">Direccion:</label>
+    <input
+        type="text"
+        name="address"
+        id="address"
+        value={address}
+        placeholder="Ingresar direccion"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="city" class="block font-bold mb-2">Ciudad:</label>
+    <input
+        type="text"
+        name="city"
+        id="city"
+        value={city}
+        placeholder="Ingresar ciudad"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="ownerId" class="block font-bold mb-2">Owner ID:</label>
+    <input
+        type="text"
+        name="ownerId"
+        id="ownerId"
+        value={ownerId}
+        placeholder="Cargar ID del dueño"
+        class="border border-gray-300 rounded-md p-2 w-full mb-4"
+        required
+    />
+
+    <label for="CommerceLogo" class="block font-bold mb-2">Logo:</label>
+    <input
+        type="file"
+        name="CommerceLogo"
+        id="CommerceLogo"
+        class="border border-gray-300 rounded-md mb-4"
+    />
+
+    <label for="CommerceImg" class="block font-bold mb-2">Imagen:</label>
+    <input
+        type="file"
+        name="CommerceImg"
+        id="CommerceImg"
+        class="border border-gray-300 rounded-md mb-4"
+    />
+
+    <button
+        type="submit"
+        id="submit"
+        class="bg-slate-500 py-2 px-4 text-white font-bold rounded-lg hover:bg-slate-600">
+        { id ? 'Actualizar Comercio' : 'Agregar Comercio'}
+    </button>
+</form>
